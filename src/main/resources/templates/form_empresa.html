@@ -1,0 +1,88 @@
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro Empresa - Bolsa de Empleo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+
+<div class="page-wrapper-custom"> <nav class="navbar">
+    <div>
+        <a th:href="@{/}">Bolsa de Empleo</a>
+    </div>
+    <div>
+        <a th:href="@{/puestos/buscar}">Buscar Puestos</a>
+        <a class="btn btn-outline" th:href="@{/registro/empresa}">Registro Empresa</a>
+        <a class="btn btn-outline" th:href="@{/registro/oferente}">Registro Oferente</a>
+        <a th:href="@{/login}">Iniciar Sesión</a>
+    </div>
+</nav>
+
+    <div class="flex-grow-container"> <div class="form-container form-large form-compact">
+        <h2>Registro de Empresa</h2>
+
+        <div th:if="${error}" style="color:red; margin-bottom: 10px; text-align: center; font-size: 14px;">
+            <p th:text="${error}"></p>
+        </div>
+
+        <form th:action="@{/registro/guardar}" method="post">
+            <input type="hidden" name="tipo" value="EMPRESA">
+
+            <div class="form-group">
+                <label>Nombre de la Empresa:</label>
+                <input type="text" name="nombre" placeholder="Nombre comercial" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Correo Corporativo:</label>
+                    <input type="email" name="email" placeholder="rrhh@empresa.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña:</label>
+                    <input type="password" name="clave" placeholder="Mínimo 6 caracteres" required minlength="6">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Teléfono:</label>
+                    <input type="text" name="telefono" placeholder="8888-8888" required>
+                </div>
+                <div class="form-group">
+                    <label>Localización:</label>
+                    <input type="text" name="localizacion" placeholder="Provincia, Ciudad" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Descripción de la Empresa:</label>
+                <textarea name="descripcion" placeholder="Breve reseña de la empresa..."
+                          style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 5px; height: 80px; font-family: Arial, sans-serif;"></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="margin-top: 5px;">
+                Registrarse
+            </button>
+
+            <div style="margin-top: 10px; text-align: center;">
+                <a th:href="@{/}" style="color: #666; text-decoration: none; font-size: 13px;">← Volver al inicio</a>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>
+<footer class="footer-dark">
+    <div>
+        <strong>Bolsa de Empleo</strong><br>
+        Total Soft Inc.
+    </div>
+    <div style="text-align: right; line-height: 1.4;">
+        Contacto: info@bolsaempleo.local<br>
+        © 2026
+    </div>
+</footer>
+</body>
+</html>

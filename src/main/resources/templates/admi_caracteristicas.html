@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Características</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+<body class="bg-light">
+
+<div class="admin-wrapper">
+  <nav class="navbar">
+    <div>
+      <a th:href="@{/}">Bolsa de Empleo</a>
+    </div>
+    <div>
+      <a th:href="@{/admin/dashboard}">Dashboard</a>
+      <a th:href="@{/admin/empresas-pendientes}">Empresas pendientes</a>
+      <a th:href="@{/admin/oferentes-pendientes}">Oferentes pendientes</a>
+      <a th:href="@{/admin/caracteristicas}" >Características</a>
+      <a th:href="@{/admin/reportes}">Reportes</a>
+
+      <span style="color: white; margin-left: 15px;" th:text="${correoUsuario}">admin@tuorg.com</span>
+      <a th:href="@{/logout}" style="color: white; border: 1px solid white; padding: 4px 12px; border-radius: 4px; margin-left: 10px;">Salir</a>
+    </div>
+  </nav>
+
+  <main class="admin-content">
+    <h1 style="font-size: 2.5rem; margin-bottom: 30px;">Características</h1>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+
+      <div class="container-green">
+        <p><strong>Ruta:</strong></p>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+          <a th:href="@{/admin/caracteristicas}" class="breadcrumb-item">Raíces</a>
+          <span th:if="${padre != null}"> / </span>
+          <span th:if="${padre != null}" class="breadcrumb-item" th:text="${padre.nombre}">Categoría</span>
+        </div>
+
+        <p style="color: #718096; margin-bottom: 15px;">
+          Categorías: <span th:text="${padre != null ? padre.nombre : 'raíces'}" style="font-weight: bold;">raíces</span>
+        </p>
+
+        <div th:each="c : ${lista}" class="list-item-card">
+          <span th:text="${c.nombre}" style="font-weight: bold; color: #2d3748;">Bases de Datos</span>
+          <a th:href="@{/admin/caracteristicas(padreId=${c.id})}" class="btn-entrar">Entrar</a>
+        </div>
+
+        <div th:if="${#lists.isEmpty(lista)}" style="text-align: center; color: #a0aec0; padding: 20px;">
+          No hay subcategorías aquí.
+        </div>
+      </div>
+
+      <div class="container-green">
+        <h3 style="margin-top: 0;">Agregar Característica</h3>
+        <form th:action="@{/admin/caracteristicas/save}" method="post">
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px;">Nombre</label>
+            <input type="text" name="nombre" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px;">
+          </div>
+
+          <div style="margin-bottom: 25px;">
+            <label style="display: block; margin-bottom: 5px;">Padre</label>
+            <select name="padreId" style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 5px; background: white;">
+              <option value="">(sin padre)</option>
+              <option th:each="r : ${raices}"
+                      th:value="${r.id}"
+                      th:text="${r.nombre}"
+                      th:selected="${padre != null and padre.id == r.id}"></option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-crear">Crear</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer-dark">
+    <div>
+      <strong>Bolsa de Empleo</strong><br>
+      Total Soft Inc.
+    </div>
+    <div style="text-align: right; line-height: 1.4;">
+      Contacto: info@bolsaempleo.local<br>
+      Créditos: Equipo de desarrollo
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

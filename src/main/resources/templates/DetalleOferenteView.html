@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle de Oferente</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+<body class="admin-body">
+
+<div class="admin-wrapper">
+  <nav class="navbar">
+    <div>
+      <a th:href="@{/}">Bolsa de Empleo</a>
+    </div>
+    <div>
+      <a th:href="@{/empresa/dashboard}">Dashboard</a>
+      <a th:href="@{/empresa/new}">Publicar Puesto</a>
+      <a th:href="@{/empresa/show}">Mis Puestos</a>
+
+      <span style="color: white; margin-left: 15px;" th:text="${correoUsuario}">
+                empresa@correo.com
+            </span>
+
+      <a th:href="@{/logout}"
+         style="color: white; border: 1px solid white; padding: 4px 12px; border-radius: 4px; margin-left: 10px; text-decoration: none;">
+        Salir
+      </a>
+    </div>
+  </nav>
+
+  <main class="admin-content">
+    <div class="perfil-card" style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+
+      <div class="perfil-header" style="border-bottom: 2px solid #eee; margin-bottom: 20px; padding-bottom: 10px;">
+        <h1 th:text="${oferente.nombre + ' ' + oferente.apellido}" style="color: #2c3e50; margin-bottom: 5px;">Nombre del Candidato</h1>
+        <span class="badge" style="background: #3498db; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9em;">Candidato Seleccionado</span>
+      </div>
+
+      <div class="perfil-body" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <p><strong>Cédula:</strong> <span th:text="${oferente.cedula}"></span></p>
+          <p><strong>Nacionalidad:</strong> <span th:text="${oferente.nacionalidad}"></span></p>
+          <p><strong>Correo:</strong> <span th:text="${oferente.email}"></span></p>
+        </div>
+
+        <div>
+          <p><strong>Teléfono:</strong> <span th:text="${oferente.telefono}"></span></p>
+          <p><strong>Residencia:</strong> <span th:text="${oferente.residencia}"></span></p>
+        </div>
+      </div>
+
+      <div class="cv-section" style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-left: 5px solid #e74c3c; border-radius: 5px;">
+        <h3 style="margin-top: 0; color: #c0392b;">Currículum Vitae</h3>
+
+        <div th:if="${oferente.curriculoPath != null}">
+          <p>El candidato ha subido un documento profesional en formato PDF.</p>
+          <a th:href="@{/empresa/ver-pdf/{cedula}(cedula=${oferente.cedula})}"
+             target="_blank"
+             class="btn-pdf"
+             style="display: inline-block; background: #e74c3c; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; transition: background 0.3s;">
+            Abrir PDF en pestaña nueva
+          </a>
+        </div>
+
+        <div th:unless="${oferente.curriculoPath != null}">
+          <p style="color: #7f8c8d; font-style: italic;">Este candidato aún no ha adjuntado su currículum PDF.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 30px;">
+        <a th:href="@{/empresa/buscar-candidatos/{id}(id=${puestoId})}"
+           style="color: #3498db; text-decoration: none; font-weight: bold;">
+          ← Volver a la lista de candidatos
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer-dark">
+    <div>
+      <strong>Bolsa de Empleo</strong><br>
+      Total Soft Inc.
+    </div>
+    <div style="text-align: right; line-height: 1.4;">
+      Contacto: info@bolsaempleo.local<br>
+      © 2026
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

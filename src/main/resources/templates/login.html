@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Sistema de Empleo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+
+<nav class="navbar">
+    <div>
+        <a href="/">Bolsa de Empleo</a>
+    </div>
+
+    <div>
+        <a th:href="@{/puestos/buscar}">Buscar Puestos</a>
+
+        <!-- antes: btn btn-outline-info -->
+        <a class="btn btn-outline" th:href="@{/registro/empresa}">
+            Registro Empresa
+        </a>
+
+        <!-- antes: btn btn-primary -->
+        <a class="btn btn-outline" th:href="@{/registro/oferente}">
+            Registro Oferente
+        </a>
+
+        <a th:href="@{/login}">Iniciar Sesión</a>
+    </div>
+</nav>
+<div class="container">
+    <div class="form-container" style="max-width: 400px; margin: 50px auto;">
+        <h2>Iniciar Sesión</h2>
+
+        <div th:if="${param.success}" style="background-color: #d1ecf1; color: #0c5460; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 14px;">
+            Registro enviado correctamente. <strong>Su cuenta está pendiente de aprobación por el administrador.</strong>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label>Correo electrónico:</label>
+                <input type="email" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Contraseña:</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <div th:if="${param.error}" style="color: red; font-size: 13px; margin-top: 10px;">
+                 Verifique sus credenciales o si su cuenta ya fue activada.
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-top: 20px;">Entrar</button>
+        </form>
+    </div>
+</div>
+
+<footer class="footer-dark">
+    <div>
+        <strong>Bolsa de Empleo</strong><br>
+        Total Soft Inc.
+    </div>
+    <div style="text-align: right; line-height: 1.4;">
+        Contacto: info@bolsaempleo.local<br>
+        © 2026
+    </div>
+</footer>
+
+</body>
+</html>
+
+

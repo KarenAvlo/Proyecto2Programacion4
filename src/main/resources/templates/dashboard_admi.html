@@ -1,0 +1,64 @@
+
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrador - Bolsa de Empleo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+
+<div class="admin-wrapper">
+
+    <nav class="navbar">
+        <div>
+            <a href="/">Bolsa de Empleo</a>
+        </div>
+
+        <div>
+            <a th:href="@{/admin/dashboard}">Dashboard</a>
+            <a th:href="@{/admin/empresas-pendientes}">Empresas Pendientes</a>
+            <a th:href="@{/admin/oferentes-pendientes}">Oferentes Pendientes</a>
+            <a th:href="@{/admin/caracteristicas}">Características</a>
+            <a th:href="@{/admin/caracteristicas}">Reportes</a> <!--arreglar-->
+
+            <span style="color: white; text-decoration: none;" th:text="${correoUsuario}">
+            usuario@correo.com
+        </span>
+
+            <a th:href="@{/logout}"
+               style="color: white; text-decoration: none; border: 1px solid white; padding: 4px 12px; border-radius: 4px;">
+                Salir
+            </a>
+        </div>
+
+    </nav>
+
+    <main class="admin-content">
+        <h1 style="text-align: left; font-size: 2.5rem; margin-bottom: 0;"> Administrador</h1>
+        <p style="text-align: left; color: #666; margin-bottom: 30px;">Gestión de aprobaciones y catálogos del sistema.</p>
+
+        <div class="admin-grid">
+            <a th:href="@{/admin/empresas-pendientes}" class="card-admin">Empresas Pendientes</a>
+            <a th:href="@{/admin/oferentes-pendientes}" class="card-admin">Oferentes Pendientes</a>
+            <a th:href="@{/admin/caracteristicas}" class="card-admin">Características</a>
+            <a th:href="@{/admin/reportes}" class="card-admin">Reportes</a>
+        </div>
+    </main>
+
+    <footer class="footer-dark">
+        <div>
+            <strong>Bolsa de Empleo</strong><br>
+            Total Soft Inc.
+        </div>
+        <div style="text-align: right; line-height: 1.4;">
+            Contacto: info@bolsaempleo.local<br>
+            © 2026
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>

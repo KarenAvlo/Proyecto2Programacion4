@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidatos Recomendados</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+<body class="admin-body">
+
+<div class="admin-wrapper">
+    <nav class="navbar">
+        <div>
+            <a th:href="@{/}">Bolsa de Empleo</a>
+        </div>
+        <div>
+            <a th:href="@{/empresa/dashboard}">Dashboard</a>
+            <a th:href="@{/empresa/new}">Publicar Puesto</a>
+            <a th:href="@{/empresa/show}">Mis Puestos</a>
+
+            <span style="color: white; margin-left: 15px;" th:text="${correoUsuario}">
+                empresa@correo.com
+            </span>
+
+            <a th:href="@{/logout}"
+               style="color: white; border: 1px solid white; padding: 4px 12px; border-radius: 4px; margin-left: 10px; text-decoration: none;">
+                Salir
+            </a>
+        </div>
+    </nav>
+
+    <main class="admin-content">
+        <div class="title-section" style="margin-bottom: 40px; border-bottom: 2px solid #eee; padding-bottom: 15px;">
+            <h1 style="color: #2c3e50;">Candidatos Recomendados</h1>
+
+        </div>
+
+        <div th:if="${#lists.isEmpty(candidatos)}" class="no-results shadow-sm">
+            <h2 style="margin-top:0;">No hay coincidencias exactas</h2>
+            <p>Ningún candidato cumple actualmente con el nivel mínimo de los requisitos técnicos solicitados.</p>
+            <br>
+            <a th:href="@{/empresa/show}" class="btn-perfil" style="background: #7f8c8d;">Regresar a Mis Puestos</a>
+        </div>
+
+        <div th:each="item : ${candidatos}" class="match-card">
+            <div class="candidate-info">
+                <h3 th:text="${item.oferente.nombre + ' ' + item.oferente.apellido}">Nombre Candidato</h3>
+                <p><strong>Ubicación:</strong> <span th:text="${item.oferente.residencia}">Heredia</span></p>
+                <p><strong>Nacionalidad:</strong> <span th:text="${item.oferente.nacionalidad}">Costarricense</span></p>
+                <p><strong>Habilidades coincidentes:</strong> <span th:text="${item.coincidencias}">0</span></p>
+            </div>
+
+            <div class="match-stats">
+                <div class="percentage-text" th:text="${item.porcentaje} + '%'">0%</div>
+                <div class="progress-container">
+                    <div class="progress-bar" th:style="'width: ' + ${item.porcentaje} + '%'"></div>
+                </div>
+                <small style="color: #95a5a6; text-transform: uppercase; letter-spacing: 1px;">Afinidad Técnica</small>
+            </div>
+
+            <div class="actions">
+                <a th:href="@{/empresa/ver-perfil/{cedula}(cedula=${item.oferente.cedula}, puestoId=${puestoId})}"
+                   class="btn-perfil">
+                    Ver Perfil
+                </a>
+            </div>
+        </div>
+
+
+    </main>
+    <footer class="footer-dark">
+        <div>
+            <strong>Bolsa de Empleo</strong><br>
+            Total Soft Inc.
+        </div>
+        <div style="text-align: right; line-height: 1.4;">
+            Contacto: info@bolsaempleo.local<br>
+            © 2026
+        </div>
+    </footer>
+
+</div>
+
+
+</body>
+</html>

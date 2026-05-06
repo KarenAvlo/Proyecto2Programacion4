@@ -1,0 +1,1123 @@
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    background-color: #212529;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.btn-outline-info {
+    border: 1px solid #0dcaf0;
+    color: #0dcaf0;
+    background-color: transparent;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    margin-top: 50px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+p {
+    color: #6c757d;
+}
+
+.form-container {
+    width: 400px;
+    margin: 80px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px #ccc;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+label {
+    font-weight: bold;
+}
+
+button {
+    width: 100%;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    border: none;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+}
+
+.bg-light {
+    background-color: #f8f9fa;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-container.form-large {
+    max-width: 550px; /* Un poco más ancho que el login para que no se vea apretado */
+    margin: 40px auto;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/*.error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}*/
+
+.error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    border: 1px solid #f5c6cb;
+}
+
+.success {
+    color: green;
+    background-color: #d4edda;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* --- Reset y Base --- */
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Fundamental para el footer */
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+/* --- Barra de Navegación (Igual a tu imagen) --- */
+/*.navbar {
+    background-color: #212529;
+    padding: 12px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}*/
+
+/*.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 14px;
+}*/
+
+/* --- Contenedor Dinámico --- */
+/* Esto hace que el contenido empuje el footer al fondo sin crear scroll innecesario */
+.container {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra el login verticalmente */
+    align-items: center;
+}
+
+/* --- Estilo del Login (Basado en tu imagen) --- */
+.form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 450px;
+    margin: 20px auto;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* --- Footer (Fijo abajo sin estorbar) --- */
+footer {
+    flex-shrink: 0; /* Evita que el footer se aplaste */
+    background-color: #212529;
+    color: white;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+/*---------------------------*/
+/* Contenedor de fila para poner dos campos juntos */
+.form-row {
+    display: flex;
+    gap: 15px; /* Espacio entre columnas */
+    margin-bottom: 5px;
+}
+
+.form-row .form-group {
+    flex: 1; /* Hace que ambos campos midan lo mismo */
+}
+
+/* Reducimos un poco el margen de los grupos para ahorrar espacio vertical */
+.form-group {
+    margin-bottom: 8px !important;
+}
+
+/* Hacemos el contenedor un poco más ancho para que la doble columna se vea bien */
+.form-container.form-large {
+    max-width: 550px;
+    padding: 20px 30px; /* Reducimos padding superior/inferior */
+    margin: 10px auto; /* Reducimos margen externo */
+}
+
+.form-container h2 {
+    margin-bottom: 15px; /* Menos espacio bajo el título */
+}
+
+-----------------------------------
+    /* Contenedor especial que solo usaremos en los registros */
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ocupa el alto de la pantalla */
+}
+
+/* Este div crecerá para empujar el footer al fondo */
+.flex-content {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center; /* Centra el form verticalmente */
+    justify-content: center;
+}
+
+/* Versión ultra compacta para que no haya scroll */
+.form-compact {
+    max-width: 500px;
+    padding: 15px 30px;
+    margin: 10px auto;
+}
+
+.form-compact .form-group {
+    margin-bottom: 5px; /* Espacio mínimo entre campos */
+}
+
+.form-compact h2 {
+    margin-bottom: 10px;
+}
+
+/* --- Solución Definitiva para Registros --- */
+
+/* Contenedor principal para registros que ocupa toda la pantalla */
+.page-wrapper-custom {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Altura exacta de la ventana del navegador */
+    overflow: hidden; /* Evita que aparezca scroll lateral o vertical innecesario */
+}
+
+/* Este div crece para llenar el hueco blanco y centra el formulario */
+.flex-grow-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    padding: 10px;
+}
+
+/* Versión compacta para que el formulario no sea tan alto */
+.form-compact {
+    max-width: 480px !important;
+    padding: 15px 25px !important;
+    margin: 0 auto !important;
+}
+
+.form-compact h2 {
+    margin-bottom: 10px !important;
+    font-size: 1.5rem;
+}
+
+.form-compact .form-group {
+    margin-bottom: 8px !important;
+}
+
+.form-compact input {
+    padding: 8px !important; /* Inputs más delgados */
+}
+
+/* Asegurar que el footer se mantenga al fondo sin agrandarse */
+.footer-dark {
+    flex-shrink: 0;
+    background-color: #212529;
+    color: white;
+    padding: 10px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+}
+
+/* ========================================== */
+/* ESTILOS ESPECÍFICOS DEL ADMINISTRADOR    */
+/* ========================================== */
+
+/* Layout Base para evitar el hueco blanco y fijar el footer */
+.admin-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+}
+
+/* Header Oscuro */
+.header-dark {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 10px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.logo-admin {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.logo-icon {
+    background-color: #0dcaf0;
+    color: white;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: white;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 0.9rem;
+}
+
+.btn-salir {
+    background: transparent;
+    border: 1px solid #ff4d4d;
+    color: #ff4d4d;
+    padding: 5px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-salir:hover {
+    background: #ff4d4d;
+    color: white;
+}
+
+/* Contenido Principal Admin */
+/* --- Dashboard Administrador --- */
+
+/* Contenedor principal para que el footer se quede abajo */
+.admin-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.admin-content {
+    flex: 1;
+    padding: 40px 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Rejilla de botones/tarjetas */
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.card-admin {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    color: #333;
+    padding: 40px 20px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.card-admin:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: #0d6efd;
+    color: #0d6efd;
+}
+
+/*------*/
+main {
+    padding: 40px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.table-admin {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+}
+
+.table-admin th {
+    text-align: left;
+    border-bottom: 2px solid #dee2e6;
+    padding: 12px;
+    color: #212529;
+}
+
+.table-admin td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Botón verde de la imagen */
+.btn-approve {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-approve:hover {
+    background-color: #218838;
+}
+
+/* Ajuste para que el correo se vea igual a los links del nav */
+.user-email {
+    color: white;
+    margin-right: 15px;
+    font-size: 0.9rem;
+}
+
+/*--------------------------------------*/
+     /* Estilos para la tabla y el formulario que no están en el CSS global */
+
+.container-green {
+    background-color: #f0fff4; /* Verde muy claro */
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    height: fit-content;
+}
+
+.breadcrumb-item {
+    background: white;
+    border: 1px solid #cbd5e0;
+    padding: 5px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+.list-item-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 12px 20px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-entrar {
+    border: 1px solid #4299e1;
+    color: #4299e1;
+    background: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-entrar:hover {
+    background: #4299e1;
+    color: white;
+}
+
+.btn-crear {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dashboard-container {
+    padding: 60px 10%;
+    background-color: #ffffff;
+    min-height: 60vh;
+}
+
+.title-main {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.subtitle-main {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+/* BOTONES AZULES COMO LA IMAGEN */
+.btn-group {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-custom-blue {
+    background-color: #007bff; /* El azul de la imagen */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px; /* Bordes redondeados suaves */
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    border: none;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+.btn-custom-blue:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+/* ===================*/
+
+     /* Estilos para igualar la imagen de referencia */
+ .puestos-container {
+     padding: 50px 10%;
+     background-color: #f8f9fa;
+     min-height: 70vh;
+ }
+
+.title-section h1 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    color: #212529;
+}
+
+/* Botón azul principal */
+.btn-custom-blue {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 30px;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+.btn-custom-blue:hover {
+    background-color: #0056b3;
+}
+
+/* Tabla estilizada */
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.table-custom th {
+    text-align: left;
+    padding: 15px;
+    background-color: #fff;
+    border-bottom: 2px solid #dee2e6;
+    color: #495057;
+    font-weight: bold;
+}
+
+.table-custom td {
+    padding: 15px;
+    border-bottom: 1px solid #dee2e6;
+    color: #333;
+    vertical-align: middle;
+}
+
+/* Badge para estado Activo */
+.badge-activo {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+/* Botones de acción en la tabla */
+.btn-desactivar {
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    background: transparent;
+    transition: all 0.2s;
+}
+
+.btn-desactivar:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-buscar-candidatos {
+    background-color: #007bff;
+    color: white;
+    padding: 7px 14px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+.btn-buscar-candidatos:hover {
+    background-color: #0056b3;
+}
+.admin-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.title-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-custom-blue {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-buscar-candidatos {
+    background-color: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.text-right { text-align: right; }
+
+/*match candidatos*/
+
+ .match-container {
+     padding: 40px 20px;
+     max-width: 1000px;
+     margin: 0 auto;
+     min-height: 70vh; /* Para que el footer no suba si hay pocos resultados */
+ }
+.match-card {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-left: 5px solid #27ae60;
+}
+.candidate-info h3 {
+    margin: 0 0 8px 0;
+    color: #2c3e50;
+    font-size: 1.4em;
+}
+.candidate-info p {
+    margin: 4px 0;
+    color: #7f8c8d;
+}
+.match-stats {
+    text-align: center;
+    min-width: 200px;
+    padding: 0 20px;
+}
+.progress-container {
+    width: 100%;
+    background-color: #ecf0f1;
+    border-radius: 10px;
+    margin: 10px 0;
+    height: 14px;
+    border: 1px solid #dcdde1;
+}
+.progress-bar {
+    height: 100%;
+    background-color: #27ae60;
+    border-radius: 10px;
+    transition: width 0.8s ease-in-out;
+}
+.percentage-text {
+    font-weight: bold;
+    color: #2ecc71;
+    font-size: 1.2em;
+}
+.btn-perfil {
+    background-color: #3498db;
+    color: white !important;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+}
+.btn-perfil:hover {
+    background-color: #2980b9;
+}
+.no-results {
+    text-align: center;
+    padding: 60px;
+    background: white;
+    border-radius: 8px;
+    color: #7f8c8d;
+}
+
+/*================DETALLES CANDIDATO================*/
+
+ .detail-card {
+     background: white;
+     padding: 30px;
+     border-radius: 8px;
+     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+     margin-top: 20px;
+ }
+.info-section {
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+.info-section h2 {
+    color: #2c3e50;
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+.skills-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+.skills-table th {
+    text-align: left;
+    border-bottom: 2px solid #34495e;
+    padding: 10px;
+    color: #2c3e50;
+}
+.skills-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+}
+.label {
+    font-weight: bold;
+    width: 150px;
+    display: inline-block;
+}
+.btn-volver {
+    display: inline-block;
+    background-color: #f8f9fa;
+    color: #333;
+    padding: 8px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-top: 20px;
+}
+.btn-volver:hover {
+    background-color: #e2e6ea;
+}
+
+.custom-card {
+    background-color: #f0fff4 !important; /* Verde muy claro */
+    border: 1px solid #d1e7dd !important;
+    border-radius: 10px;
+}
+
+.btn-outline-primary {
+    color: #0d6efd;
+    border-color: #0d6efd;
+    background-color: white;
+}
+
+/* Efecto al pasar el mouse sobre el botón */
+.btn-detalle:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+/* ========================================== */
+/* NUEVOS ESTILOS PARA TARJETAS DE PUESTOS  */
+/* ========================================== */
+
+/* Contenedor de la cuadrícula (3 columnas) */
+/* Nuevo nombre único para no afectar al panel de administración */
+.puestos-grid-container {
+    flex-grow: 1; /* Esto empuja el footer al fondo si hay poco contenido */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+    padding: 40px 5%;
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+    align-items: start;
+}
+
+/* Asegúrate de que las cards se vean bien dentro */
+.card-puesto {
+    position: relative;
+    background-color: #f0fff4;
+    border: 1px solid #d1e7dd;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+}
+
+/* Tarjeta de puesto (Verde claro) */
+.card-puesto {
+    position: relative; /* Base para el detalle flotante */
+    background-color: #f0fff4;
+    border: 1px solid #d1e7dd;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px;
+    text-align: left;
+}
+
+.card-puesto h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #212529;
+}
+
+.card-puesto p {
+    margin: 5px 0;
+    color: #6c757d;
+}
+
+.salario {
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+/* Botón Ver Detalle */
+.btn-detalle {
+    background-color: white;
+    color: #0d6efd;
+    border: 1px solid #0d6efd;
+    padding: 8px;
+    border-radius: 6px;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card-puesto:hover .btn-detalle {
+    background-color: #0d6efd;
+    color: white;
+}
+
+/* EL DETALLE FLOTANTE (ESTILO IMAGEN) */
+.detalle-flotante {
+    display: none;
+    position: absolute;
+    top: 85%; /* Aparece sobre el botón */
+    left: 5%;
+    width: 90%;
+    background: white;
+    border: 1px solid #0d6efd;
+    border-radius: 8px;
+    padding: 15px;
+    z-index: 100;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card-puesto:hover .detalle-flotante {
+    display: block; /* Se muestra al pasar el mouse por la card */
+}
+
+.detalle-flotante ul {
+    margin: 10px 0 0 0;
+    padding-left: 20px;
+    font-size: 0.9rem;
+    list-style-type: disc;
+}
+
+/*------------------*/
+
+
+ .search-box {
+     background-color: white;
+     padding: 40px;
+     border: 1px solid #dee2e6;
+     border-radius: 8px;
+     max-width: 600px; /* Más angosto como tu imagen */
+     margin: 40px auto;
+     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+ }
+.category-title {
+    font-weight: bold;
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+.check-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    margin-left: 10px;
+}
+.check-item input {
+    margin-right: 12px;
+    width: 17px;
+    height: 17px;
+}
+.btn-row {
+    margin-top: 30px;
+    display: flex;
+    gap: 10px;
+}
+/* Ajuste para que el body sea un contenedor flex y el footer baje */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+.main-content {
+    flex: 1;
+}
+/*=========OFERENTE===========*/
+
+     /* Estilos Generales */
+ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; background-color: #f4f7f6; }
+
+/* HEADER (MENÚ) */
+header { background-color: #212529; color: white; padding: 10px 40px; display: flex; justify-content: space-between; align-items: center; }
+.nav-left { display: flex; align-items: center; gap: 20px; }
+.logo { font-weight: bold; font-size: 1.2em; display: flex; align-items: center; gap: 8px; }
+.nav-links { display: flex; gap: 15px; }
+.nav-links a { color: #adb5bd; text-decoration: none; font-size: 0.9em; }
+.nav-links a:hover { color: white; }
+.user-info { display: flex; align-items: center; gap: 15px; font-size: 0.9em; }
+.btn-salir { background: transparent; border: 1px solid #6c757d; color: white; padding: 4px 12px; cursor: pointer; border-radius: 4px; text-decoration: none; }
+
+/* CUERPO PRINCIPAL */
+main { flex: 1; padding: 20px 40px; }
+h2 { margin-bottom: 20px; font-weight: 500; }
+.main-container { display: flex; gap: 20px; align-items: flex-start; }
+.panel { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+/* PANEL IZQUIERDO: TABLA */
+.panel-habilidades { flex: 1; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 12px; border-bottom: 1px solid #dee2e6; font-size: 0.9em; }
+td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9em; }
+
+/* PANEL CENTRAL: NAVEGACIÓN */
+.panel-navegacion { flex: 1.2; background-color: #f8fff9; border: 1px solid #e1eee2; }
+.breadcrumb-container { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.breadcrumb-item { background: white; border: 1px solid #ccc; padding: 4px 10px; border-radius: 5px; text-decoration: none; color: #555; font-size: 0.85em; }
+.list-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 12px; margin-top: 10px; border-radius: 6px; border: 1px solid #eee; }
+.btn-entrar { color: #007bff; border: 1px solid #007bff; padding: 4px 15px; text-decoration: none; border-radius: 4px; font-size: 0.85em; }
+
+/* PANEL DERECHO: FORMULARIO */
+.panel-agregar { flex: 0.8; border: 1px solid #dee2e6; }
+.form-group { margin-bottom: 15px; }
+label { display: block; margin-bottom: 8px; font-size: 0.85em; color: #666; }
+select, input { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; }
+.btn-agregar { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+
+/* FOOTER */
+footer { background-color: #212529; color: white; padding: 20px 40px; display: flex; justify-content: space-between; font-size: 0.85em; }
+.footer-left p, .footer-right p { margin: 5px 0; color: #adb5bd; }
+.text-blue { color: #007bff; }
+
+

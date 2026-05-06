@@ -1,0 +1,78 @@
+<DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Administrador - Empresas Pendientes</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+
+</head>
+<body class="bg-light">
+
+<div class="admin-wrapper">
+  <nav class="navbar">
+    <div>
+      <a th:href="@{/}">Bolsa de Empleo</a>
+    </div>
+
+    <div>
+      <a th:href="@{/admin/dashboard}">Dashboard</a>
+      <a th:href="@{/admin/empresas-pendientes}">Empresas Pendientes</a>
+      <a th:href="@{/admin/oferentes-pendientes}">Oferentes Pendientes</a>
+      <a th:href="@{/admin/caracteristicas}">Características</a>
+      <a th:href="@{/admin/reportes}">Reportes</a>
+
+      <span style="color: white; text-decoration: none; margin-left: 15px;" th:text="${correoUsuario}">
+                usuario@correo.com
+            </span>
+
+      <a th:href="@{/logout}"
+         style="color: white; text-decoration: none; border: 1px solid white; padding: 4px 12px; border-radius: 4px; margin-left: 10px;">
+        Salir
+      </a>
+    </div>
+  </nav>
+
+  <main class="admin-content">
+    <h1 style="text-align: left; font-size: 2.5rem; margin-bottom: 10px;">Oferentes Pendientes</h1>
+    <p style="text-align: left; color: #666; margin-bottom: 30px;">Lista de oferentes que esperan aprobación para acceder al sistema.</p>
+
+    <table class="table-admin">
+      <thead>
+      <tr>
+        <th>Usuario (Email)</th>
+        <th>Acción</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="ofe : ${oferentes}">
+        <td th:text="${ofe.email}">juan@ejemplo.com</td>
+        <td>
+          <form th:action="@{/admin/autorizar/{email}(email=${ofe.email})}" method="post">
+            <input type="hidden" name="tipo" value="OFERENTE">
+            <button type="submit" class="btn-approve">Aprobar</button>
+          </form>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(oferentes)}">
+        <td colspan="2" style="text-align: center; padding: 30px; color: #999;">
+          No hay oferentes pendientes por el momento.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </main>
+
+  <footer class="footer-dark">
+    <div>
+      <strong>Bolsa de Empleo</strong><br>
+      Total Soft Inc.
+    </div>
+    <div style="text-align: right; line-height: 1.4;">
+      Contacto: info@bolsaempleo.local<br>
+      © 2026
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

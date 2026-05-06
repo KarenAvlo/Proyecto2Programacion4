@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferente - Dashboard</title>
+    <style>
+        /* Configuración Global */
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* HEADER / NAVBAR */
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 0 60px; /* Quitamos padding vertical para que la navbar controle el alto */
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between; /* ESTO EMPUJA TODO A LOS EXTREMOS */
+            align-items: center;
+            height: 60px;
+            width: 100%;
+        }
+
+        /* Logo a la izquierda */
+        .nav-brand a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Contenedor de links y usuario a la derecha */
+        .nav-items-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-items-right a {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-items-right a:hover {
+            color: #ffffff;
+        }
+
+        /* Estilo específico para el botón Salir */
+        .btn-logout {
+            color: white !important;
+            border: 1px solid white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .btn-logout:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Contenido Principal */
+        main {
+            flex: 1;
+            padding: 60px 100px;
+        }
+
+        h1 { font-size: 32px; margin: 0 0 10px 0; color: #222; }
+        .subtitle { color: #777; margin-bottom: 30px; font-size: 16px; }
+
+        /* Botones Azules */
+        .actions-container { display: flex; gap: 10px; align-items: center; }
+        .btn-blue {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-blue:hover { background-color: #0056b3; }
+
+        /* Footer Oscuro */
+        footer {
+            background-color: #1a1a1a;
+            color: #888;
+            padding: 25px 100px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a th:href="@{/}">Bolsa de Empleo</a>
+        </div>
+
+        <div class="nav-items-right">
+            <a th:href="@{/presentation/oferente/show}">Dashboard</a>
+            <a th:href="@{/presentation/oferente/habilidades}">Mis Habilidades</a>
+            <a th:href="@{/presentation/oferente/mi-cv}">Mi CV</a>
+
+            <span style="color: white; font-size: 14px; margin-left: 10px;"
+                  th:text="${usuarioLogueado?.email}">usuario@correo.com</span>
+
+            <a th:href="@{/logout}" class="btn-logout">Salir</a>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <h1>Oferente - Dashboard</h1>
+    <p class="subtitle">Administra tus habilidades y tu CV.</p>
+
+    <div class="actions-container">
+        <a th:href="@{/presentation/oferente/habilidades}" class="btn-blue">Mis habilidades</a>
+
+        <form th:action="@{/presentation/oferente/cvUpload}" method="post" enctype="multipart/form-data" id="cvForm">
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 10px; color: #4a5568;">
+                    Seleccionar archivo PDF:
+                </label>
+
+                <input type="file"
+                       id="cv-file"
+                       name="archivo"
+                       accept="application/pdf"
+                       required
+                       style="display: block; width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;">
+            </div>
+
+            <button type="submit" class="btn-blue" style="background-color: #28a745; border: none; width: 100%; cursor: pointer;">
+                Guardar Currículum
+            </button>
+        </form>
+    </div>
+
+    <div th:if="${mensaje}" class="alert-info" style="margin-top: 20px; color: #007bff;">
+        <p th:text="${mensaje}"></p>
+    </div>
+</main>
+
+<footer class="footer-dark">
+    <div>
+        <strong>Bolsa de Empleo</strong><br>
+        Total Soft Inc.
+    </div>
+    <div style="text-align: right; line-height: 1.4;">
+        Contacto: info@bolsaempleo.local<br>
+        © 2026
+    </div>
+</footer>
+
+</body>
+</html>

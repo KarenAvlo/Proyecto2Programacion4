@@ -1,0 +1,103 @@
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro Oferente</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+
+<nav class="navbar">
+    <div>
+        <a href="/">Bolsa de Empleo</a>
+    </div>
+
+    <div>
+        <a th:href="@{/puestos/buscar}">Buscar Puestos</a>
+
+        <!-- antes: btn btn-outline-info -->
+        <a class="btn btn-outline" th:href="@{/registro/empresa}">
+            Registro Empresa
+        </a>
+
+        <!-- antes: btn btn-primary -->
+        <a class="btn btn-outline" th:href="@{/registro/oferente}">
+            Registro Oferente
+        </a>
+
+        <a th:href="@{/login}">Iniciar Sesión</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="form-container form-large">
+        <h2>Registro Oferente</h2>
+
+        <form th:action="@{/registro/guardar}" method="post">
+            <p class="error" th:if="${errorCampos}" th:text="${errorCampos}"></p>
+
+            <div class="form-group">
+                <label>Cédula (Identificación):</label>
+                <input type="text" name="cedula" required minlength="9" maxlength="9">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nombre:</label>
+                    <input type="text" name="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>Primer Apellido:</label>
+                    <input type="text" name="apellido" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Nacionalidad:</label>
+                    <input type="text" name="nacionalidad" required>
+                </div>
+                <div class="form-group">
+                    <label>Teléfono:</label>
+                    <input type="tel" name="telefono" required minlength="8"  maxlength="8">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Lugar de Residencia:</label>
+                <input type="text" name="residencia" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Correo Electrónico:</label>
+                    <input type="email" name="email" required placeholder="ejemplo@correo.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña:</label>
+                    <input type="password" name="clave" required minlength="6">
+                </div>
+            </div>
+
+            <input type="hidden" name="tipo" value="OFERENTE">
+
+            <button type="submit" class="btn-primary">Registrarse</button>
+        </form>
+    </div>
+</div>
+
+<footer class="footer-dark">
+    <div>
+        <strong>Bolsa de Empleo</strong><br>
+        Total Soft Inc.
+    </div>
+    <div style="text-align: right; line-height: 1.4;">
+        Contacto: info@bolsaempleo.local<br>
+        © 2026
+    </div>
+</footer>
+
+</body>
+</html>
