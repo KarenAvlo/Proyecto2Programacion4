@@ -1,0 +1,221 @@
+.empresa-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.empresa-content {
+    flex: 1;
+    padding: 40px 60px;
+}
+
+.empresa-content h1 {
+    font-size: 28px;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.perfil-card {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.perfil-card h2 {
+    font-size: 18px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.perfil-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.perfil-info p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.perfil-info strong {
+    color: #1a1a1a;
+}
+
+.puestos-section {
+    background: white;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.section-header h2 {
+    font-size: 18px;
+    color: #1a1a1a;
+    margin: 0;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+.puestos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.puesto-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    transition: all 0.3s;
+}
+
+.puesto-item:hover {
+    background: #f0f0f0;
+}
+
+.puesto-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #1a1a1a;
+}
+
+.puesto-info p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+    font-weight: 600;
+}
+
+.badge-activo {
+    display: inline-block;
+    background-color: #28a745;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.badge-inactivo {
+    display: inline-block;
+    background-color: #6c757d;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.puesto-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .empresa-content {
+        padding: 20px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .puesto-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .puesto-actions {
+        width: 100%;
+    }
+
+    .btn-secondary,
+    .btn-danger {
+        flex: 1;
+    }
+}
