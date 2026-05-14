@@ -2,6 +2,7 @@ package com.example.proyecto1programacion4.data;
 
 import com.example.proyecto1programacion4.logic.Empresa;
 import com.example.proyecto1programacion4.logic.Puesto;
+import org.antlr.v4.runtime.atn.SemanticContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +14,7 @@ import java.util.List;
 public interface PuestoRepository extends JpaRepository<Puesto, Integer> {
     // Busca puestos filtrando por el email de la empresa dueña
     List<Puesto> findByEmailEmpresa(Empresa empresa);
+
 
     @Query("""
             SELECT DISTINCT p
