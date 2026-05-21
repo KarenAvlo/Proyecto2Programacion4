@@ -8,11 +8,17 @@ import LoginPage from './pages/public/LoginPage';
 import RegistroEmpresa from './pages/public/RegistroEmpresa';
 import RegistroOferente from './pages/public/RegistroOferente';
 
-// Dashboards
+// Admin
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminEmpresas from './pages/admin/AdminEmpresas';
 import AdminOferentes from './pages/admin/AdminOferentes';
+import AdminReportes from './pages/admin/AdminReportes';
+import AdmiCaracteristicas from './pages/admin/AdmiCaracteristicas';
+
+// Empresa
 import EmpresaDashboard from './pages/empresa/EmpresaDashboard';
+
+// Oferente
 import OferenteDashboard from './pages/oferente/OferenteDashboard';
 
 export default function App() {
@@ -30,6 +36,8 @@ export default function App() {
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/admin/empresas" element={<AdminEmpresas />} />
                     <Route path="/admin/oferentes" element={<AdminOferentes />} />
+                    <Route path="/admin/reportes" element={<AdminReportes />} />
+                    <Route path="/admin/caracteristicas" element={<AdmiCaracteristicas />} />
                 </Route>
 
                 {/* Empresa */}

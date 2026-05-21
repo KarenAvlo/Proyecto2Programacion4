@@ -21,7 +21,23 @@ export const adminAPI = {
         return apiClient.get('/admin/caracteristicas');
     },
 
-    crearCaracteristica(data) {
+    getCaracteristicasRaices() {
+        return apiClient.get('/admin/caracteristicas/raices');
+    },
+
+    getCaracteristicasPorPadre(padreId) {
+        return apiClient.get(`/admin/caracteristicas/${padreId}/hijas`);
+    },
+
+    crearCaracteristica(nombre, padreId = null) {
+        const data = {
+            nombre: nombre,
+            padreId: padreId
+        };
         return apiClient.post('/admin/caracteristicas', data);
     },
+
+    eliminarCaracteristica(id) {
+        return apiClient.delete(`/admin/caracteristicas/${id}`);
+    }
 };

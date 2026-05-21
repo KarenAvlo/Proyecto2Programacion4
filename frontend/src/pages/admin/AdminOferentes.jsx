@@ -15,9 +15,11 @@ export default function AdminOferentes() {
     const fetchOferentes = async () => {
         try {
             const data = await adminAPI.getOferentesPendientes();
-            setOferentes(data);
+            console.log('Oferentes recibidos:', data);
+            setOferentes(data || []);
         } catch (error) {
             console.error('Error:', error);
+            setOferentes([]);
         } finally {
             setLoading(false);
         }
@@ -33,6 +35,7 @@ export default function AdminOferentes() {
             alert('Oferente aprobado correctamente');
             fetchOferentes();
         } catch (error) {
+            console.error('Error:', error);
             alert('Error al aprobar el oferente');
         }
     };
@@ -58,6 +61,7 @@ export default function AdminOferentes() {
                             <tr>
                                 <th>Email</th>
                                 <th>Tipo</th>
+                                <th>Estado</th>
                                 <th>Acción</th>
                             </tr>
                             </thead>
@@ -66,6 +70,7 @@ export default function AdminOferentes() {
                                 <tr key={oferente.email}>
                                     <td>{oferente.email}</td>
                                     <td>{oferente.tipo}</td>
+                                    <td>{oferente.estado ? 'Aprobado' : 'Pendiente'}</td>
                                     <td>
                                         <button
                                             className="btn-approve"

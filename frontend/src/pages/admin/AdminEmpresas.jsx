@@ -15,9 +15,11 @@ export default function AdminEmpresas() {
     const fetchEmpresas = async () => {
         try {
             const data = await adminAPI.getEmpresasPendientes();
-            setEmpresas(data);
+            console.log('Empresas recibidas:', data);
+            setEmpresas(data || []);
         } catch (error) {
             console.error('Error:', error);
+            setEmpresas([]);
         } finally {
             setLoading(false);
         }
@@ -33,6 +35,7 @@ export default function AdminEmpresas() {
             alert('Empresa aprobada correctamente');
             fetchEmpresas();
         } catch (error) {
+            console.error('Error:', error);
             alert('Error al aprobar la empresa');
         }
     };
@@ -58,6 +61,7 @@ export default function AdminEmpresas() {
                             <tr>
                                 <th>Email</th>
                                 <th>Tipo</th>
+                                <th>Estado</th>
                                 <th>Acción</th>
                             </tr>
                             </thead>
@@ -66,6 +70,7 @@ export default function AdminEmpresas() {
                                 <tr key={empresa.email}>
                                     <td>{empresa.email}</td>
                                     <td>{empresa.tipo}</td>
+                                    <td>{empresa.estado ? 'Aprobado' : 'Pendiente'}</td>
                                     <td>
                                         <button
                                             className="btn-approve"
