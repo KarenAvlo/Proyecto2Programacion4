@@ -1,49 +1,218 @@
-.form-container {
+.page-cv-container {
+  background-color: #f4f7f6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.oferente-cv-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 20px;
+}
+
+.cv-card-wrapper {
+  width: 100%;
+  max-width: 600px;
   background: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 450px;
-  margin: 20px auto;
-}
-.form-container.form-large {
-  max-width: 550px;
-  padding: 20px 30px;
-  margin: 10px auto;
-}
-.form-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-.form-group {
-  margin-bottom: 15px;
-  text-align: left;
-}
-.form-group label {
-  font-weight: bold;
-  margin-bottom: 5px;
-  display: block;
-}
-.form-group input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  margin-top: 5px;
+  padding: 35px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
 }
-.btn-primary {
-  background-color: #0d6efd;
+
+.cv-card-wrapper h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 26px;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.cv-description {
+  color: #718096;
+  font-size: 14px;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+/* ALERTAS INLINE */
+.alert-cv {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.alert-success-cv {
+  background-color: #f0fff4;
+  color: #22543d;
+  border: 1px solid #c6f6d5;
+}
+
+.alert-error-cv {
+  background-color: #fff5f5;
+  color: #742a2a;
+  border: 1px solid #fed7d7;
+}
+
+/* SECCIÓN INDICADORA DE ESTADO */
+.status-section-cv {
+  margin: 25px 0;
+  background-color: #f8fafc;
+  padding: 18px;
+  border-radius: 8px;
+  border: 1px solid #edf2f7;
+}
+
+.status-badge-cv {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.status-ok-cv {
+  background-color: #e6fffa;
+  color: #047481;
+}
+
+.status-none-cv {
+  background-color: #edf2f7;
+  color: #4a5568;
+}
+
+.file-info-text {
+  font-size: 14px;
+  color: #4a5568;
+  margin: 10px 0 15px 0;
+}
+
+.file-info-text span {
+  font-family: monospace;
+  background-color: #e2e8f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #2d3748;
+}
+
+.muted-text {
+  color: #a0aec0;
+}
+
+.btn-view-cv {
+  display: inline-block;
+  color: #3182ce;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.btn-view-cv:hover {
+  text-decoration: underline;
+}
+
+/* ÁREA DE SUBIDA (INPUT FILE) */
+.upload-cv-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.upload-drag-area {
+  border: 2px dashed #cbd5e0;
+  padding: 25px;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #fafafa;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+.upload-drag-area:hover {
+  border-color: #a0aec0;
+}
+
+.file-input-label {
+  display: inline-block;
+  background-color: #edf2f7;
+  color: #4a5568;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 5px;
+  border: 1px solid #cbd5e0;
+}
+
+.file-input-label:hover {
+  background-color: #e2e8f0;
+}
+
+.upload-drag-area input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.selected-filename {
+  font-size: 13px;
+  color: #2d3748;
+  margin: 8px 0 0 0;
+}
+
+.max-size-hint {
+  font-size: 12px;
+  color: #a0aec0;
+  margin: 5px 0 0 0;
+}
+
+/* BOTÓN DE ACCIÓN */
+.btn-upload-cv {
+  background-color: #3182ce;
   color: white;
   border: none;
-  padding: 10px;
-  width: 100%;
-  border-radius: 4px;
+  padding: 12px;
+  border-radius: 6px;
   font-weight: bold;
+  font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s;
 }
-.btn-primary:hover {
-  background-color: #0b5ed7;
+
+.btn-upload-cv:hover {
+  background-color: #2b6cb0;
+}
+
+/* BOTÓN VOLVER */
+.back-link-cv-container {
+  margin-top: 25px;
+}
+
+.btn-back-cv {
+  color: #a0aec0;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.btn-back-cv:hover {
+  color: #718096;
+}
+
+.loading-placeholder {
+  font-size: 14px;
+  color: #718096;
+  text-align: center;
+  padding: 15px;
 }

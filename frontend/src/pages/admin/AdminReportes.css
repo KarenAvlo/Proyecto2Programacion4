@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Estilos Globales */
 .reports-wrapper {
   display: flex;
@@ -25,6 +26,39 @@
   font-size: 16px;
 }
 
+=======
+
+.page-reportes-container {
+  background-color: #f0f2f5;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.admin-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.admin-content-reportes {
+  flex: 1;
+  padding: 60px 100px;
+}
+
+.admin-content-reportes h1 {
+  font-size: 32px;
+  margin: 0 0 10px 0;
+  color: #222;
+}
+
+.subtitle-reportes {
+  color: #777;
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+>>>>>>> origin/kevin
 /* CONTENEDOR DE REPORTES */
 .report-card-container {
   max-width: 600px;
@@ -41,20 +75,29 @@
   border-radius: 8px;
 }
 
+<<<<<<< HEAD
 label {
+=======
+.section-report label {
+>>>>>>> origin/kevin
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
   color: #4a5568;
 }
 
+<<<<<<< HEAD
 select {
+=======
+.section-report select {
+>>>>>>> origin/kevin
   width: 100%;
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #cbd5e0;
   margin-bottom: 15px;
   font-size: 14px;
+<<<<<<< HEAD
   font-family: inherit;
 }
 
@@ -156,4 +199,79 @@ footer {
   footer div:last-child {
     text-align: left;
   }
+=======
+  background-color: #fff;
+  font-family: inherit;
+}
+
+.description-reporte {
+  font-size: 0.9em;
+  color: #718096;
+  margin-top: 0;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+/* BOTONES DE REPORTES */
+.btn-report {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.btn-puestos {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.btn-puestos:hover {
+  background-color: #c53030;
+}
+
+.btn-oferentes {
+  background-color: #3182ce;
+  color: white;
+}
+
+.btn-oferentes:hover {
+  background-color: #2b6cb0;
+}
+
+.divider-reportes {
+  border: 0;
+  border-top: 1px solid #edf2f7;
+  margin: 25px 0;
+}
+
+.back-link-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.btn-back-dashboard {
+  color: #a0aec0;
+  text-decoration: none;
+  font-size: 0.85em;
+  transition: color 0.2s;
+}
+
+.btn-back-dashboard:hover {
+  color: #4a5568;
+}
+
+/* Responsividad básica para pantallas medianas o pequeñas */
+@media (max-width: 768px) {
+  .admin-content-reportes {
+    padding: 30px 20px;
+  }
+>>>>>>> origin/kevin
 }

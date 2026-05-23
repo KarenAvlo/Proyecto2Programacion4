@@ -40,6 +40,7 @@ export default function Navbar() {
                                 <a onClick={() => navigate('/admin/empresas')}>Empresas Pendientes</a>
                                 <a onClick={() => navigate('/admin/oferentes')}>Oferentes Pendientes</a>
                                 <a onClick={() => navigate('/admin/caracteristicas')}>Características</a>
+                                <a onClick={() => navigate('/admin/reportes')}>Reportes</a>
                             </>
                         )}
                         {user.tipo === 'EMPRESA' && (

@@ -8,6 +8,7 @@ import './AdminDashboard.css';
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
+<<<<<<< HEAD
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
 
@@ -16,6 +17,35 @@ export default function AdminDashboard() {
     }, []);
 
     const userEmail = user?.email || 'usuario@correo.com';
+=======
+    const [empresasPendientes, setEmpresasPendientes] = useState(0);
+    const [oferentesPendientes, setOferentesPendientes] = useState(0);
+    const[caracteristicas, setCaracteristicas]=useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Petición de datos del dashboard
+    const fetchData = async () => {
+        try {
+            const [empresas, oferentes, caracteristicasData] = await Promise.all([
+                adminAPI.getEmpresasPendientes(),
+                adminAPI.getOferentesPendientes(),
+                adminAPI.getCaracteristicas(),
+            ]);
+            setEmpresasPendientes(empresas.length);
+            setOferentesPendientes(oferentes.length);
+            setCaracteristicas(caracteristicasData.length);
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+>>>>>>> origin/kevin
+
+    useEffect(() => {
+        fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className="admin-wrapper">
@@ -56,6 +86,7 @@ export default function AdminDashboard() {
                     Gestión de aprobaciones y catálogos del sistema.
                 </p>
 
+<<<<<<< HEAD
                 {!loading && (
                     <div className="admin-grid">
                         <a href="/admin/empresas" className="card-admin">
@@ -70,6 +101,59 @@ export default function AdminDashboard() {
                         <a href="/admin/reportes" className="card-admin">
                             Reportes
                         </a>
+=======
+                {loading ? (
+                    <div className="loading">Cargando datos...</div>
+                ) : (
+                    <div className="dashboard-grid">
+                        <div className="dashboard-card">
+                            <div className="card-icon">👥</div>
+                            <h3>Empresas Pendientes</h3>
+                            <p className="card-number">{empresasPendientes}</p>
+                            <button
+                                className="card-button"
+                                onClick={() => navigate('/admin/empresas')}
+                            >
+                                Ver Detalles
+                            </button>
+                        </div>
+
+                        <div className="dashboard-card">
+                            <div className="card-icon">💼</div>
+                            <h3>Oferentes Pendientes</h3>
+                            <p className="card-number">{oferentesPendientes}</p>
+                            <button
+                                className="card-button"
+                                onClick={() => navigate('/admin/oferentes')}
+                            >
+                                Ver Detalles
+                            </button>
+                        </div>
+
+                        <div className="dashboard-card">
+                            <div className="card-icon">⚙️</div>
+                            <h3>Gestionar Características</h3>
+                            <p className="card-desc">Crea y organiza las características del sistema</p>
+                            <button
+                                className="card-button"
+                                onClick={() => navigate('/admin/caracteristicas')}
+                            >
+                                Ir a Características
+                            </button>
+                        </div>
+
+                        <div className="dashboard-card">
+                            <div className="card-icon">📊</div>
+                            <h3>Reportes</h3>
+                            <p className="card-desc">Genera reportes PDF y exportaciones de datos</p>
+                            <button
+                                className="card-button"
+                                onClick={() => navigate('/admin/reportes')}
+                            >
+                                Ver Reportes
+                            </button>
+                        </div>
+>>>>>>> origin/kevin
                     </div>
                 )}
             </main>

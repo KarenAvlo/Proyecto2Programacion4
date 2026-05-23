@@ -12,14 +12,21 @@ import RegistroOferente from './pages/public/RegistroOferente';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminEmpresas from './pages/admin/AdminEmpresas';
 import AdminOferentes from './pages/admin/AdminOferentes';
+<<<<<<< HEAD
 import AdminReportes from './pages/admin/AdminReportes';
 import AdmiCaracteristicas from './pages/admin/AdmiCaracteristicas';
 
 // Empresa
+=======
+import AdminCaracteristicas from './pages/admin/AdmiCaracteristicas';
+import AdminReportes from './pages/admin/AdminReportes';
+>>>>>>> origin/kevin
 import EmpresaDashboard from './pages/empresa/EmpresaDashboard';
 
 // Oferente
 import OferenteDashboard from './pages/oferente/OferenteDashboard';
+import OferenteHabilidades from './pages/oferente/OferenteHabilidades';
+import CVform from './pages/oferente/CVform';
 
 export default function App() {
     return (
@@ -36,8 +43,13 @@ export default function App() {
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/admin/empresas" element={<AdminEmpresas />} />
                     <Route path="/admin/oferentes" element={<AdminOferentes />} />
+<<<<<<< HEAD
                     <Route path="/admin/reportes" element={<AdminReportes />} />
                     <Route path="/admin/caracteristicas" element={<AdmiCaracteristicas />} />
+=======
+                    <Route path="/admin/caracteristicas" element={<AdminCaracteristicas />} />
+                    <Route path="/admin/reportes" element={<AdminReportes />} />
+>>>>>>> origin/kevin
                 </Route>
 
                 {/* Empresa */}
@@ -48,6 +60,8 @@ export default function App() {
                 {/* Oferente */}
                 <Route element={<PrivateRoute requiredRole="OFERENTE" />}>
                     <Route path="/oferente/dashboard" element={<OferenteDashboard />} />
+                    <Route path="/oferente/habilidades" element={<OferenteHabilidades />} />
+                    <Route path="/oferente/cv" element={<CVform />} />
                 </Route>
             </Routes>
         </BrowserRouter>

@@ -1,46 +1,231 @@
-.admin-content {
+.page-habilidades-container {
+  background-color: #f4f7f6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.oferente-main-content {
   flex: 1;
-  padding: 40px 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-  width: 100%;
+  padding: 40px 60px;
 }
-.container-green {
-  background-color: #f0fff4;
-  border-radius: 15px;
-  padding: 20px;
-  border: 1px solid #e2e8f0;
-  height: fit-content;
+
+.oferente-main-content h2 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-weight: 500;
+  color: #212529;
+  font-size: 28px;
 }
-.puestos-container {
-  padding: 50px 10%;
-  background-color: #f8f9fa;
-  min-height: 70vh;
-}
-.match-container {
-  padding: 40px 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-  min-height: 70vh;
-}
-.detail-card {
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  margin-top: 20px;
-}
-.main-container {
+
+/* LAYOUT MULTICOLUMNA */
+.main-skills-container {
   display: flex;
   gap: 20px;
   align-items: flex-start;
-  padding: 40px;
 }
-h2 {
+
+.panel {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.panel-habilidades {
+  flex: 1;
+}
+
+.panel-navegacion {
+  flex: 1.2;
+  background-color: #f8fff9;
+  border: 1px solid #e1eee2;
+}
+
+.panel-agregar {
+  flex: 0.8;
+  border: 1px solid #dee2e6;
+}
+
+/* TABLA DE HABILIDADES */
+.skills-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.skills-table th {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 2px solid #dee2e6;
+  font-size: 14px;
+  color: #495057;
+}
+
+.skills-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
   color: #333;
-  margin-bottom: 20px;
-  font-weight: 500;
 }
-p {
+
+.text-right {
+  text-align: right !important;
+}
+
+.skill-level-badge {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* BREADCRUMB / RUTA */
+.breadcrumb-title {
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 13px;
+  color: #666;
+}
+
+.skills-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.breadcrumb-item {
+  text-decoration: none;
+  color: #007bff;
+  font-size: 13px;
+}
+
+.breadcrumb-separator {
+  color: #ccc;
+  font-size: 13px;
+}
+
+.breadcrumb-link-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  text-decoration: underline;
+}
+
+/* LISTA DE SUBCATEGORÍAS */
+.subcategories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subcategory-row-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+
+.subcategory-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.btn-entrar {
+  color: #007bff;
+  background: transparent;
+  border: 1px solid #007bff;
+  padding: 4px 15px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-entrar:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* FORMULARIO AGREGAR */
+.form-title {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  color: #212529;
+}
+
+.form-group-skills {
+  margin-bottom: 15px;
+}
+
+.form-group-skills label {
+  display: block;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.form-group-skills select,
+.form-group-skills input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-family: inherit;
+}
+
+.btn-agregar {
+  width: 100%;
+  padding: 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.btn-agregar:hover {
+  background: #0056b3;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 16px;
+}
+
+.text-muted {
   color: #6c757d;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Ajustes responsivos para pantallas pequeñas */
+@media (max-width: 992px) {
+  .main-skills-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .panel {
+    flex: none;
+    width: 100%;
+  }
 }

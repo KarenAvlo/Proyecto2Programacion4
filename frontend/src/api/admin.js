@@ -21,6 +21,7 @@ export const adminAPI = {
         return apiClient.get('/admin/caracteristicas');
     },
 
+<<<<<<< HEAD
     getCaracteristicasRaices() {
         return apiClient.get('/admin/caracteristicas/raices');
     },
@@ -34,6 +35,17 @@ export const adminAPI = {
             nombre: nombre,
             padreId: padreId
         };
+=======
+    getRaices() {
+        return apiClient.get('/admin/caracteristicas/raices');
+    },
+
+    getPorPadre(padreId) {
+        return apiClient.get(`/admin/caracteristicas/${padreId}/hijas`);
+    },
+
+    crearCaracteristica(data) {
+>>>>>>> origin/kevin
         return apiClient.post('/admin/caracteristicas', data);
     },
 
