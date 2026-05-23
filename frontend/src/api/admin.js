@@ -21,6 +21,14 @@ export const adminAPI = {
         return apiClient.get('/admin/caracteristicas');
     },
 
+    getRaices() {
+        return apiClient.get('/admin/caracteristicas/raices');
+    },
+
+    getPorPadre(padreId) {
+        return apiClient.get(`/admin/caracteristicas/${padreId}/hijas`);
+    },
+
     crearCaracteristica(data) {
         return apiClient.post('/admin/caracteristicas', data);
     },

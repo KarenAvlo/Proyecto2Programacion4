@@ -9,26 +9,31 @@ export default function AdminDashboard() {
     const navigate = useNavigate();
     const [empresasPendientes, setEmpresasPendientes] = useState(0);
     const [oferentesPendientes, setOferentesPendientes] = useState(0);
+    const[caracteristicas, setCaracteristicas]=useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
+    // Petición de datos del dashboard
     const fetchData = async () => {
         try {
-            const [empresas, oferentes] = await Promise.all([
+            const [empresas, oferentes, caracteristicasData] = await Promise.all([
                 adminAPI.getEmpresasPendientes(),
                 adminAPI.getOferentesPendientes(),
+                adminAPI.getCaracteristicas(),
             ]);
             setEmpresasPendientes(empresas.length);
             setOferentesPendientes(oferentes.length);
+            setCaracteristicas(caracteristicasData.length);
         } catch (error) {
             console.error('Error:', error);
         } finally {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className="admin-wrapper">
@@ -75,6 +80,18 @@ export default function AdminDashboard() {
                                 onClick={() => navigate('/admin/caracteristicas')}
                             >
                                 Ir a Características
+                            </button>
+                        </div>
+
+                        <div className="dashboard-card">
+                            <div className="card-icon">📊</div>
+                            <h3>Reportes</h3>
+                            <p className="card-desc">Genera reportes PDF y exportaciones de datos</p>
+                            <button
+                                className="card-button"
+                                onClick={() => navigate('/admin/reportes')}
+                            >
+                                Ver Reportes
                             </button>
                         </div>
                     </div>

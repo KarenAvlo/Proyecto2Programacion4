@@ -1,46 +1,162 @@
-.admin-content {
-  flex: 1;
+.page-caracteristicas-container {
+  background-color: #f8f9fa;
+  width: 100%;
+}
+
+.page-caracteristicas-container .admin-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-caracteristicas-container .admin-content {
+  flex: 1 0 auto;
   padding: 40px 20px;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   width: 100%;
 }
-.container-green {
+
+/* --- Rejilla de Dos Columnas --- */
+.page-caracteristicas-container .caracteristicas-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .page-caracteristicas-container .caracteristicas-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Contenedores Verdes Tradicionales --- */
+.page-caracteristicas-container .container-green {
   background-color: #f0fff4;
   border-radius: 15px;
   padding: 20px;
   border: 1px solid #e2e8f0;
   height: fit-content;
 }
-.puestos-container {
-  padding: 50px 10%;
-  background-color: #f8f9fa;
-  min-height: 70vh;
-}
-.match-container {
-  padding: 40px 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-  min-height: 70vh;
-}
-.detail-card {
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  margin-top: 20px;
-}
-.main-container {
+
+/* --- Breadcrumbs (Migas de Pan) --- */
+.page-caracteristicas-container .breadcrumb-row {
   display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  padding: 40px;
-}
-h2 {
-  color: #333;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 20px;
-  font-weight: 500;
 }
-p {
+
+.page-caracteristicas-container .breadcrumb-item {
+  background: white;
+  border: 1px solid #cbd5e0;
+  padding: 5px 15px;
+  border-radius: 8px;
+  color: #4a5568;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.page-caracteristicas-container .breadcrumb-item:hover {
+  background: #edf2f7;
+}
+
+.page-caracteristicas-container .breadcrumb-text {
+  font-weight: bold;
+  color: #2d3748;
+  font-size: 0.9rem;
+}
+
+.page-caracteristicas-container .current-category-label {
+  color: #718096;
+  margin-bottom: 15px;
+}
+
+.page-caracteristicas-container .current-category-label span {
+  font-weight: bold;
+  color: #2d3748;
+}
+
+/* --- Filas / Tarjetas de Items --- */
+.page-caracteristicas-container .list-item-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 12px 20px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-caracteristicas-container .item-name {
+  font-weight: bold;
+  color: #2d3748;
+}
+
+.page-caracteristicas-container .btn-entrar {
+  border: 1px solid #4299e1;
+  color: #4299e1;
+  background: white;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.page-caracteristicas-container .btn-entrar:hover {
+  background: #4299e1;
+  color: white;
+}
+
+.page-caracteristicas-container .no-data-text {
+  text-align: center;
+  color: #a0aec0;
+  padding: 20px;
+}
+
+/* --- Estilos de Formulario Local --- */
+.page-caracteristicas-container .form-group-local {
+  margin-bottom: 15px;
+}
+
+.page-caracteristicas-container .form-group-local label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #2d3748;
+}
+
+.page-caracteristicas-container .form-group-local input,
+.page-caracteristicas-container .form-group-local select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e0;
+  border-radius: 5px;
+  font-size: 14px;
+  background: white;
+}
+
+.page-caracteristicas-container .btn-crear {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.page-caracteristicas-container .btn-crear:hover {
+  background: #0056b3;
+}
+
+.page-caracteristicas-container .loading {
+  text-align: center;
+  padding: 40px;
   color: #6c757d;
 }

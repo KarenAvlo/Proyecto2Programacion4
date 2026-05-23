@@ -33,6 +33,11 @@ export const oferenteAPI = {
         });
     },
 
+    async obtenerCVBlob(cedula) {
+        const response = await apiClient.get(`/oferente/cv/descargar/${cedula}`);
+        return response.blob();
+    },
+
     descargarCV(cedula) {
         const token = localStorage.getItem('token');
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
