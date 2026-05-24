@@ -3,7 +3,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 
 export const apiClient = {
     async request(method, endpoint, data = null, options = {}) {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token') || localStorage.getItem('token');
         const headers = {
             'Content-Type': 'application/json',
             ...options.headers,

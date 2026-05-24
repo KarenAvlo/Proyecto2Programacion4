@@ -33,7 +33,7 @@ export default function AdminReportes() {
 
     const fetchPdf = async (path) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token') || localStorage.getItem('token');
             const headers = {};
             if (token) headers['Authorization'] = `Bearer ${token}`;
 

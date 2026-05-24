@@ -17,7 +17,7 @@ export const oferenteAPI = {
         const formData = new FormData();
         formData.append('archivo', archivo);
 
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token') || localStorage.getItem('token');
         const headers = {
             Authorization: `Bearer ${token}`,
         };
@@ -39,7 +39,7 @@ export const oferenteAPI = {
     },
 
     descargarCV(cedula) {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token') || localStorage.getItem('token');
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
         window.open(`${apiUrl}/oferente/cv/descargar/${cedula}?token=${token}`);
     },
