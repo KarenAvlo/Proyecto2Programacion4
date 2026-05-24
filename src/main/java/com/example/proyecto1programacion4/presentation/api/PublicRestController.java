@@ -1,6 +1,8 @@
 package com.example.proyecto1programacion4.presentation.api;
 
+import com.example.proyecto1programacion4.data.CaracteristicaRepository;
 import com.example.proyecto1programacion4.data.PuestoRepository;
+import com.example.proyecto1programacion4.logic.Caracteristica;
 import com.example.proyecto1programacion4.logic.Empresa;
 import com.example.proyecto1programacion4.logic.LogicService;
 import com.example.proyecto1programacion4.logic.Puesto;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.proyecto1programacion4.logic.Oferente;
 import com.example.proyecto1programacion4.presentation.api.dto.OferenteRequest;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,10 +26,16 @@ import java.util.Map;
 public class PublicRestController {
 
     private final PuestoRepository puestoRepository;
+    private final CaracteristicaRepository caracteristicaRepository;
     private final LogicService logicService;
 
-    public PublicRestController(PuestoRepository puestoRepository, LogicService logicService) {
+    public PublicRestController(
+            PuestoRepository puestoRepository,
+            CaracteristicaRepository caracteristicaRepository,
+            LogicService logicService
+    ) {
         this.puestoRepository = puestoRepository;
+        this.caracteristicaRepository = caracteristicaRepository;
         this.logicService = logicService;
     }
 
@@ -101,7 +111,8 @@ public class PublicRestController {
 
     @GetMapping("/api/public/puestos/buscar")
     public List<Map<String, Object>> buscarPuestos(
-            @RequestParam(required = false) List<Integer> caracteristicaIds
+            @RequestParam(required = false) List<Integer> caracteristicaIds,
+            @RequestParam(required = false) String moneda
     ) {
         List<Puesto> puestos;
 
@@ -113,8 +124,37 @@ public class PublicRestController {
         }
 
         return puestos.stream()
+                .filter(p -> moneda == null || moneda.isBlank() || moneda.equalsIgnoreCase(p.getMoneda()))
                 .map(this::convertirPuesto)
                 .toList();
+    }
+
+    @GetMapping("/api/public/caracteristicas")
+    public List<Map<String, Object>> caracteristicasPublicas() {
+        return caracteristicaRepository.findByIdPadreIsNull()
+                .stream()
+                .sorted(Comparator.comparing(Caracteristica::getNombre))
+                .map(this::convertirCategoriaConHijas)
+                .toList();
+    }
+
+    private Map<String, Object> convertirCategoriaConHijas(Caracteristica categoria) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("id", categoria.getId());
+        map.put("nombre", categoria.getNombre());
+        map.put("hijas", caracteristicaRepository.findByIdPadre(categoria)
+                .stream()
+                .sorted(Comparator.comparing(Caracteristica::getNombre))
+                .map(this::convertirCaracteristicaSimple)
+                .toList());
+        return map;
+    }
+
+    private Map<String, Object> convertirCaracteristicaSimple(Caracteristica caracteristica) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("id", caracteristica.getId());
+        map.put("nombre", caracteristica.getNombre());
+        return map;
     }
 
     private Map<String, Object> convertirPuesto(Puesto puesto) {

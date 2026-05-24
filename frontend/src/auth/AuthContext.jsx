@@ -7,14 +7,11 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Restaurar sesión desde localStorage
-        const token = localStorage.getItem('token');
-        const userType = localStorage.getItem('userType');
-        const email = localStorage.getItem('email');
-
-        if (token && userType && email) {
-            setUser({ email, tipo: userType, token });
-        }
+        // No restaurar sesiones viejas al volver a abrir/correr la app.
+        localStorage.removeItem('token');
+        localStorage.removeItem('userType');
+        localStorage.removeItem('email');
+        setUser(null);
         setLoading(false);
     }, []);
 

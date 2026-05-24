@@ -47,7 +47,7 @@ export default function Navbar() {
                             <>
                                 <a onClick={() => navigate('/empresa/dashboard')}>Dashboard</a>
                                 <a onClick={() => navigate('/empresa/puestos')}>Mis Puestos</a>
-                                <a onClick={() => navigate('/empresa/crear-puesto')}>Publicar Puesto</a>
+                                <a onClick={() => navigate('/empresa/publicar-puesto')}>Publicar Puesto</a>
                             </>
                         )}
                         {user.tipo === 'OFERENTE' && (

@@ -238,4 +238,38 @@ public class OferenteRestController {
         ));
 
     }
+
+    /**
+     * BUSCADOR GLOBAL PARA LA EMPRESA:
+     * Obtiene todos los oferentes del sistema inyectándoles sus respectivas habilidades.
+     * Ruta final: GET http://localhost:8080/api/oferente/busqueda-global
+     */
+    @GetMapping("/busqueda-global")
+    public ResponseEntity<List<Map<String, Object>>> obtenerOferentesParaBuscador() {
+        // 1. Traer todos los oferentes base de la base de datos
+        List<Oferente> todosLosOferentes = oferenteRepository.findAll();
+
+        // 2. Armar la estructura con sus habilidades
+        List<Map<String, Object>> resultado = todosLosOferentes.stream().map(oferente -> {
+            Map<String, Object> map = new java.util.LinkedHashMap<>();
+            map.put("cedula", oferente.getCedula());
+            map.put("nombre", oferente.getNombre());
+            map.put("apellido", oferente.getApellido());
+            map.put("email", oferente.getEmail());
+            map.put("residencia", oferente.getResidencia());
+
+            // Buscar las habilidades reales asociadas a la cédula de este oferente
+            List<OferenteCaracteristica> caracteristicas = logicService.listarCaracteristicasOferente(oferente.getCedula());
+
+            // Mapear la lista de habilidades al formato legible por el Frontend
+            List<String> habilidadesNombres = caracteristicas.stream()
+                    .map(h -> h.getIdCaracteristica().getNombre())
+                    .toList();
+
+            map.put("habilidades", habilidadesNombres);
+            return map;
+        }).toList();
+
+        return ResponseEntity.ok(resultado);
+    }
 }

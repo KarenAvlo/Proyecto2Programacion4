@@ -8,16 +8,7 @@ import './AdminDashboard.css';
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
-<<<<<<< HEAD
-    const { user } = useAuth();
-    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        setLoading(false);
-    }, []);
-
-    const userEmail = user?.email || 'usuario@correo.com';
-=======
     const [empresasPendientes, setEmpresasPendientes] = useState(0);
     const [oferentesPendientes, setOferentesPendientes] = useState(0);
     const[caracteristicas, setCaracteristicas]=useState([]);
@@ -40,7 +31,7 @@ export default function AdminDashboard() {
             setLoading(false);
         }
     };
->>>>>>> origin/kevin
+
 
     useEffect(() => {
         fetchData();
@@ -86,22 +77,7 @@ export default function AdminDashboard() {
                     Gestión de aprobaciones y catálogos del sistema.
                 </p>
 
-<<<<<<< HEAD
-                {!loading && (
-                    <div className="admin-grid">
-                        <a href="/admin/empresas" className="card-admin">
-                            Empresas Pendientes
-                        </a>
-                        <a href="/admin/oferentes" className="card-admin">
-                            Oferentes Pendientes
-                        </a>
-                        <a href="/admin/caracteristicas" className="card-admin">
-                            Características
-                        </a>
-                        <a href="/admin/reportes" className="card-admin">
-                            Reportes
-                        </a>
-=======
+
                 {loading ? (
                     <div className="loading">Cargando datos...</div>
                 ) : (
@@ -153,7 +129,7 @@ export default function AdminDashboard() {
                                 Ver Reportes
                             </button>
                         </div>
->>>>>>> origin/kevin
+
                     </div>
                 )}
             </main>

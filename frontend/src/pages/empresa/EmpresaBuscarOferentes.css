@@ -1,0 +1,198 @@
+/* Contenedor General */
+.search-oferentes-page {
+    background-color: #f7fafc;
+    min-height: 100vh;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.search-oferentes-page .page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.search-oferentes-page .main-content {
+    flex: 1 0 auto;
+    padding: 40px 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.search-oferentes-page h1 {
+    font-size: 2.2rem;
+    color: #2d3748;
+    margin: 0 0 10px 0;
+}
+
+.search-oferentes-page .subtitle {
+    color: #718096;
+    margin-bottom: 30px;
+}
+
+/* Distribución en Dos Columnas: Filtros a la Izquierda, Tarjetas a la Derecha */
+.search-oferentes-page .layout-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+@media (max-width: 900px) {
+    .search-oferentes-page .layout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Panel de Filtros (Estilo Verde Corporativo) */
+.search-oferentes-page .filter-sidebar {
+    background-color: #f0fff4;
+    border: 1px solid #c6f6d5;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.search-oferentes-page .filter-sidebar h3 {
+    color: #22543d;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #c6f6d5;
+    padding-bottom: 8px;
+}
+
+.search-oferentes-page .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.search-oferentes-page .filter-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #4a5568;
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.search-oferentes-page .filter-checkbox-label input {
+    width: 16px;
+    height: 16px;
+    accent-color: #2f8659;
+}
+
+/* Rejilla de Tarjetas de Oferentes */
+.search-oferentes-page .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Tarjeta del Oferente (Card - Sin Foto) */
+.search-oferentes-page .oferente-card {
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.search-oferentes-page .oferente-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+}
+
+.search-oferentes-page .card-header h2 {
+    font-size: 1.25rem;
+    color: #2d3748;
+    margin: 0 0 5px 0;
+}
+
+.search-oferentes-page .card-cedula {
+    font-size: 0.85rem;
+    color: #a0aec0;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.search-oferentes-page .card-info-row {
+    font-size: 0.9rem;
+    color: #4a5568;
+    margin: 6px 0;
+}
+
+/* Sección de la Barra de Progreso del Match */
+.search-oferentes-page .match-section {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.search-oferentes-page .match-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.search-oferentes-page .progress-bar-container {
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    height: 8px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.search-oferentes-page .progress-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+/* Habilidades del candidato en formato tags */
+.search-oferentes-page .skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.search-oferentes-page .tag-skill {
+    background-color: #edf2f7;
+    color: #4a5568;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+/* Mensajes de Carga y Vacío */
+.search-oferentes-page .loading-box {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.1rem;
+    color: #718096;
+}
+
+.search-oferentes-page .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    background-color: white;
+    border: 1px dashed #cbd5e0;
+    border-radius: 8px;
+    color: #a0aec0;
+    font-style: italic;
+}

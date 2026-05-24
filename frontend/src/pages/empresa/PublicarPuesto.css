@@ -1,49 +1,231 @@
-.form-container {
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 450px;
-  margin: 20px auto;
+.publicar-puesto-page {
+  background-color: #f4f6f9;
+  min-height: 100vh;
 }
-.form-container.form-large {
-  max-width: 550px;
-  padding: 20px 30px;
-  margin: 10px auto;
+
+.publicar-puesto-page .form-container.form-large {
+  max-width: 680px;
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin: 40px auto;
 }
-.form-container h2 {
-  text-align: center;
+
+.publicar-puesto-page h2 {
+  color: #2d3748;
+  margin-bottom: 5px;
+  font-size: 24px;
+}
+
+.publicar-puesto-page .subtitle {
+  color: #718096;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.publicar-puesto-page .form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.publicar-puesto-page .val-moneda {
+  flex: 1;
+}
+
+.publicar-puesto-page .val-salario {
+  flex: 3;
+}
+
+.publicar-puesto-page .form-group {
   margin-bottom: 20px;
 }
-.form-group {
-  margin-bottom: 15px;
-  text-align: left;
-}
-.form-group label {
-  font-weight: bold;
-  margin-bottom: 5px;
+
+.publicar-puesto-page .form-group label {
   display: block;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 8px;
+  font-size: 14px;
 }
-.form-group input {
+
+.publicar-puesto-page .form-group input,
+.publicar-puesto-page .form-group select,
+.publicar-puesto-page .form-group textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  margin-top: 5px;
+  padding: 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 15px;
+  color: #2d3748;
   box-sizing: border-box;
+  transition: border-color 0.2s;
 }
-.btn-primary {
-  background-color: #0d6efd;
+
+.publicar-puesto-page .form-group textarea {
+  resize: none;
+}
+
+.publicar-puesto-page .form-group input:focus,
+.publicar-puesto-page .form-group select:focus,
+.publicar-puesto-page .form-group textarea:focus {
+  border-color: #4299e1;
+  outline: none;
+}
+
+/* Sección de Requisitos dinámicos */
+.publicar-puesto-page .requisitos-section {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+
+.publicar-puesto-page .requisitos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.publicar-puesto-page .requisitos-header h3 {
+  font-size: 16px;
+  color: #4a5568;
+  margin: 0;
+}
+
+.publicar-puesto-page .no-reqs-text {
+  font-size: 13.5px;
+  color: #a0aec0;
+  text-align: center;
+  margin: 15px 0;
+}
+
+.publicar-puesto-page .requisito-row {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 12px;
+  background: white;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #edf2f7;
+}
+
+.publicar-puesto-page .requisito-row select {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+}
+
+.publicar-puesto-page .requisito-row > select {
+  flex: 2;
+}
+
+.publicar-puesto-page .nivel-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.publicar-puesto-page .nivel-picker label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #718096;
+}
+
+/* Banners de estado */
+.publicar-puesto-page .error-banner {
+  background: #fff5f5;
+  color: #c53030;
+  border: 1px solid #fed7d7;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.publicar-puesto-page .success-banner {
+  background: #f0fff4;
+  color: #2f855a;
+  border: 1px solid #c6f6d5;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+/* Botones */
+.publicar-puesto-page .btn-primary {
+  background-color: #3182ce;
   color: white;
   border: none;
-  padding: 10px;
-  width: 100%;
-  border-radius: 4px;
-  font-weight: bold;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s;
 }
-.btn-primary:hover {
-  background-color: #0b5ed7;
+
+.publicar-puesto-page .btn-primary:hover {
+  background-color: #2b6cb0;
+}
+
+.publicar-puesto-page .btn-secondary {
+  background-color: #edf2f7;
+  color: #4a5568;
+  border: 1px solid #cbd5e0;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.publicar-puesto-page .btn-secondary:hover {
+  background-color: #e2e8f0;
+}
+
+.publicar-puesto-page .btn-delete {
+  background: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #fed7d7;
+  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.publicar-puesto-page .btn-delete:hover {
+  background: #fed7d7;
+}
+
+.publicar-puesto-page .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 20px;
+}
+
+.publicar-puesto-page .btn-cancel {
+  background: transparent;
+  color: #4a5568;
+  border: 1px solid #cbd5e0;
+  padding: 12px 20px;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.publicar-puesto-page .btn-cancel:hover {
+  background: #f7fafc;
 }

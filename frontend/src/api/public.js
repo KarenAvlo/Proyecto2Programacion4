@@ -5,19 +5,22 @@ export const publicAPI = {
         return apiClient.get('/public/puestos/recientes');
     },
 
-    buscarPuestos(caracteristicaIds = []) {
-        if (!caracteristicaIds || caracteristicaIds.length === 0) {
-            return apiClient.get('/public/puestos/buscar');
+    buscarPuestos({ caracteristicaIds = [], moneda = '' } = {}) {
+        const params = new URLSearchParams();
+
+        if (moneda) {
+            params.append('moneda', moneda);
         }
-        const params = caracteristicaIds.map(id => `caracteristicaIds=${id}`).join('&');
-        return apiClient.get(`/public/puestos/buscar?${params}`);
+
+        caracteristicaIds.forEach(id => {
+            params.append('caracteristicaIds', id);
+        });
+
+        const query = params.toString();
+        return apiClient.get(`/public/puestos/buscar${query ? `?${query}` : ''}`);
     },
 
-    getCaracteristicasRaices() {
-        return apiClient.get('/admin/caracteristicas/raices');
-    },
-
-    getCaracteristicasHijas(padreId) {
-        return apiClient.get(`/admin/caracteristicas/${padreId}/hijas`);
+    getCaracteristicasPublicas() {
+        return apiClient.get('/public/caracteristicas');
     },
 };

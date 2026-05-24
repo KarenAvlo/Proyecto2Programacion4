@@ -1,24 +1,4 @@
-<<<<<<< HEAD
-.admin-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #f5f5f5;
-}
 
-.admin-content {
-  flex: 1;
-  padding: 40px 60px;
-}
-
-.admin-content h1 {
-  color: #222;
-  margin-bottom: 30px;
-  font-weight: 600;
-}
-
-.characteristics-grid {
-=======
 .page-caracteristicas-container {
   background-color: #f8f9fa;
   width: 100%;
@@ -40,15 +20,13 @@
 
 /* --- Rejilla de Dos Columnas --- */
 .page-caracteristicas-container .caracteristicas-grid {
->>>>>>> origin/kevin
+
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 30px;
 }
 
-<<<<<<< HEAD
-.container-green {
-=======
+
 @media (max-width: 768px) {
   .page-caracteristicas-container .caracteristicas-grid {
     grid-template-columns: 1fr;
@@ -57,7 +35,7 @@
 
 /* --- Contenedores Verdes Tradicionales --- */
 .page-caracteristicas-container .container-green {
->>>>>>> origin/kevin
+
   background-color: #f0fff4;
   border-radius: 15px;
   padding: 20px;
@@ -174,21 +152,7 @@
   height: fit-content;
 }
 
-<<<<<<< HEAD
-.form-group {
-  margin-bottom: 15px;
-}
 
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 600;
-  color: #4a5568;
-}
-
-.form-group input,
-.form-group select {
-=======
 /* --- Breadcrumbs (Migas de Pan) --- */
 .page-caracteristicas-container .breadcrumb-row {
   display: flex;
@@ -280,66 +244,17 @@
 
 .page-caracteristicas-container .form-group-local input,
 .page-caracteristicas-container .form-group-local select {
->>>>>>> origin/kevin
+
   width: 100%;
   padding: 10px;
   border: 1px solid #cbd5e0;
   border-radius: 5px;
-<<<<<<< HEAD
-  font-family: inherit;
-=======
->>>>>>> origin/kevin
+
   font-size: 14px;
   background: white;
 }
 
-<<<<<<< HEAD
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #3182ce;
-  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
-}
 
-.empty-state {
-  text-align: center;
-  color: #a0aec0;
-  padding: 20px;
-  font-size: 14px;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #718096;
-  font-size: 16px;
-}
-
-@media (max-width: 768px) {
-  .admin-content {
-    padding: 20px;
-  }
-
-  .characteristics-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .list-item-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .item-actions {
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .btn-entrar,
-  .btn-eliminar {
-    flex: 1;
-  }
-}
-=======
 .page-caracteristicas-container .btn-crear {
   background: #007bff;
   color: white;
@@ -362,4 +277,4 @@
   padding: 40px;
   color: #6c757d;
 }
->>>>>>> origin/kevin
+
