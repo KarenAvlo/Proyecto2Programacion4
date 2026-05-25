@@ -20,7 +20,13 @@ export const apiClient = {
         };
 
         if (data && (method === 'POST' || method === 'PUT')) {
-            config.body = JSON.stringify(data);
+            if (data instanceof FormData) {
+                config.body = data;
+                // Dejamos que el navegador decida el Content-Type y su boundary
+                delete headers['Content-Type'];
+            } else {
+                config.body = JSON.stringify(data);
+            }
         }
 
         try {

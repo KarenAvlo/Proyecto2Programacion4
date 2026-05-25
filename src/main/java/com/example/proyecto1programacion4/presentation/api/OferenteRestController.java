@@ -1,10 +1,12 @@
 package com.example.proyecto1programacion4.presentation.api;
 
+import com.example.proyecto1programacion4.data.CaracteristicaRepository;
 import com.example.proyecto1programacion4.data.OferenteCaracteristicaRepository;
 import com.example.proyecto1programacion4.data.OferenteRepository;
 import com.example.proyecto1programacion4.logic.LogicService;
 import com.example.proyecto1programacion4.logic.Oferente;
 import com.example.proyecto1programacion4.logic.OferenteCaracteristica;
+import com.example.proyecto1programacion4.logic.Caracteristica;
 import com.example.proyecto1programacion4.presentation.api.dto.HabilidadRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -30,17 +33,20 @@ public class OferenteRestController {
     private final LogicService logicService;
     private final OferenteRepository oferenteRepository;
     private final OferenteCaracteristicaRepository oferenteCaracteristicaRepository;
+    private final CaracteristicaRepository caracRepo;
 
     private final Path uploadDir = Paths.get("./uploads");
 
     public OferenteRestController(
             LogicService logicService,
             OferenteRepository oferenteRepository,
-            OferenteCaracteristicaRepository oferenteCaracteristicaRepository
+            OferenteCaracteristicaRepository oferenteCaracteristicaRepository,
+            CaracteristicaRepository caracRepo
     ) {
         this.logicService = logicService;
         this.oferenteRepository = oferenteRepository;
         this.oferenteCaracteristicaRepository = oferenteCaracteristicaRepository;
+        this.caracRepo = caracRepo;
     }
 
     /**
@@ -65,6 +71,17 @@ public class OferenteRestController {
                 "residencia", oferente.getResidencia(),
                 "curriculoPath", oferente.getCurriculoPath() != null ? oferente.getCurriculoPath() : ""
         ));
+    }
+
+    @GetMapping("/caracteristicas")
+    public ResponseEntity<Map<String, Object>> listarCaracteristicas(@RequestParam(required = false) Integer padreId) {
+        List<Caracteristica> lista = (padreId == null)
+                ? caracRepo.findByPadreIsNull()
+                : caracRepo.findByPadreId(padreId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("lista", lista); // Esto coincide con lo que el Front espera
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -194,12 +211,16 @@ public class OferenteRestController {
         try {
             Resource resource = logicService.obtenerArchivoCV(cedula);
 
+            if (resource == null || !resource.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"cv_" + cedula + ".pdf\"")
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
                     .body(resource);
         } catch (Exception ex) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

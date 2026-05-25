@@ -5,46 +5,53 @@ export const oferenteAPI = {
         return apiClient.get('/oferente/perfil');
     },
 
-    getHabilidades() {
-        return apiClient.get('/oferente/habilidades');
-    },
-
-    guardarHabilidades(habilidades) {
-        return apiClient.post('/oferente/habilidades', { habilidades });
-    },
-
-    subirCV(archivo) {
-        const formData = new FormData();
-        formData.append('archivo', archivo);
-
-        const token = sessionStorage.getItem('token') || localStorage.getItem('token');
-        const headers = {
-            Authorization: `Bearer ${token}`,
-        };
-
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
-        return fetch(`${apiUrl}/oferente/cv/subir`, {
-            method: 'POST',
-            headers,
-            body: formData,
-        }).then(r => {
-            if (!r.ok) throw new Error('Error al subir CV');
-            return r.json();
-        });
-    },
-
+    //Requiere responseType 'blob' para PDFs)
     async obtenerCVBlob(cedula) {
         const response = await apiClient.get(`/oferente/cv/descargar/${cedula}`);
         return response.blob();
     },
 
-    descargarCV(cedula) {
-        const token = sessionStorage.getItem('token') || localStorage.getItem('token');
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
-        window.open(`${apiUrl}/oferente/cv/descargar/${cedula}?token=${token}`);
+    //Subir el CV
+    subirCV(file) {
+        const formData = new FormData();
+        formData.append('archivo', file);
+        return apiClient.post('/oferente/cv/subir', formData);
+    },
+/*
+    getCaracteristicasCatalogo() {
+        // Usa la ruta que sepas que devuelve todas las características de la BD
+        return apiClient.get('/caracteristicas');
+    },
+ */
+
+    //Obtener las habilidades
+    getHabilidades() {
+        return apiClient.get('/oferente/habilidades');
     },
 
-    getDetalles(cedula) {
-        return apiClient.get(`/oferente/detalles/${cedula}`);
+    //Guardar habilidad
+    saveHabilidad(data) {
+        return apiClient.post('/oferente/habilidades', data);
     },
+
+    //obtiene la lista completa de caracteristicas
+    getCaracteristicas(idPadre = null) {
+        const url = idPadre
+            ? `/oferente/caracteristicas?padreId=${idPadre}`
+            : `/oferente/caracteristicas`;
+
+        return apiClient.get(url);
+    }
+/*
+    //Obtener categorías/características
+    getSubcategorias(idPadre) {
+        if (idPadre) {
+            // Reemplaza esto por la ruta exacta de tu Spring Boot para "Listar Hijas"
+            return apiClient.get(`/caracteristicas/hijas/${idPadre}`);
+        } else {
+            // Reemplaza esto por la ruta exacta de tu Spring Boot para "Listar Raíces"
+            return apiClient.get('/caracteristicas/raices');
+        }
+    }
+*/
 };
