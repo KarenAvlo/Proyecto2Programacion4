@@ -123,6 +123,97 @@
     color: #666;
 }
 
+.puestos-privados-section {
+    margin-top: 30px;
+}
+
+.section-header {
+    margin-bottom: 18px;
+}
+
+.section-header h2 {
+    margin: 0 0 6px 0;
+    color: #1a1a1a;
+    font-size: 20px;
+}
+
+.section-header p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.puestos-privados-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.puesto-privado-card {
+    background: #fff;
+    border: 1px solid #e6e9ef;
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.puesto-privado-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.puesto-privado-header h3 {
+    margin: 0;
+    color: #1a1a1a;
+    font-size: 16px;
+}
+
+.badge-private {
+    flex: 0 0 auto;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.badge-publica {
+    flex: 0 0 auto;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.puesto-descripcion {
+    margin: 0 0 14px 0;
+    color: #333;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.puesto-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: #555;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.puesto-caracteristicas {
+    margin: 0;
+    padding-left: 18px;
+    color: #444;
+    font-size: 13px;
+}
+
 @media (max-width: 768px) {
     .oferente-content {
         padding: 20px;

@@ -3,10 +3,13 @@ package com.example.proyecto1programacion4.presentation.api;
 import com.example.proyecto1programacion4.data.CaracteristicaRepository;
 import com.example.proyecto1programacion4.data.OferenteCaracteristicaRepository;
 import com.example.proyecto1programacion4.data.OferenteRepository;
+import com.example.proyecto1programacion4.data.PuestoRepository;
 import com.example.proyecto1programacion4.logic.LogicService;
 import com.example.proyecto1programacion4.logic.Oferente;
 import com.example.proyecto1programacion4.logic.OferenteCaracteristica;
 import com.example.proyecto1programacion4.logic.Caracteristica;
+import com.example.proyecto1programacion4.logic.Puesto;
+import com.example.proyecto1programacion4.logic.PuestoCaracteristica;
 import com.example.proyecto1programacion4.presentation.api.dto.HabilidadRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +39,7 @@ public class OferenteRestController {
     private final OferenteRepository oferenteRepository;
     private final OferenteCaracteristicaRepository oferenteCaracteristicaRepository;
     private final CaracteristicaRepository caracRepo;
+    private final PuestoRepository puestoRepository;
 
     private final Path uploadDir = Paths.get("C:\\Users\\Kevin\\Desktop\\Progra 4, 2026\\Projecto2\\Proyecto2Progra4\\uploads");
 
@@ -43,12 +47,14 @@ public class OferenteRestController {
             LogicService logicService,
             OferenteRepository oferenteRepository,
             OferenteCaracteristicaRepository oferenteCaracteristicaRepository,
-            CaracteristicaRepository caracRepo
+            CaracteristicaRepository caracRepo,
+            PuestoRepository puestoRepository
     ) {
         this.logicService = logicService;
         this.oferenteRepository = oferenteRepository;
         this.oferenteCaracteristicaRepository = oferenteCaracteristicaRepository;
         this.caracRepo = caracRepo;
+        this.puestoRepository = puestoRepository;
     }
 
     /**
@@ -324,6 +330,30 @@ public class OferenteRestController {
 
     }
 
+    @GetMapping("/puestos/privados/recientes")
+    public ResponseEntity<List<Map<String, Object>>> listarPuestosPrivadosRecientes() {
+        List<Puesto> puestos = puestoRepository
+                .findTop3ByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PRIVADA");
+
+        return ResponseEntity.ok(puestos.stream()
+                .map(this::convertirPuesto)
+                .toList());
+    }
+
+    @GetMapping("/puestos/recientes")
+    public ResponseEntity<List<Map<String, Object>>> listarPuestosRecientesParaOferente() {
+        List<Puesto> publicos = puestoRepository
+                .findTop3ByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PUBLICA");
+        List<Puesto> privados = puestoRepository
+                .findTop3ByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PRIVADA");
+
+        List<Map<String, Object>> resultado = new java.util.ArrayList<>();
+        resultado.addAll(publicos.stream().map(this::convertirPuesto).toList());
+        resultado.addAll(privados.stream().map(this::convertirPuesto).toList());
+
+        return ResponseEntity.ok(resultado);
+    }
+
     /**
      * BUSCADOR GLOBAL PARA LA EMPRESA:
      * Obtiene todos los oferentes del sistema inyectándoles sus respectivas habilidades.
@@ -356,5 +386,33 @@ public class OferenteRestController {
         }).toList();
 
         return ResponseEntity.ok(resultado);
+    }
+
+    private Map<String, Object> convertirPuesto(Puesto puesto) {
+        Map<String, Object> map = new java.util.LinkedHashMap<>();
+        map.put("id", puesto.getId());
+        map.put("descripcion", puesto.getDescripcion());
+        map.put("salarioOfrecido", puesto.getSalarioOfrecido());
+        map.put("moneda", puesto.getMoneda());
+        map.put("tipoPublicacion", puesto.getTipoPublicacion());
+        map.put("fechaPublicacion", puesto.getFechaPublicacion());
+        map.put("empresa", puesto.getEmailEmpresa() != null ? puesto.getEmailEmpresa().getNombre() : "");
+        map.put("caracteristicas", puesto.getPuestoCaracteristicas()
+                .stream()
+                .map(this::convertirCaracteristicaPuesto)
+                .toList());
+        return map;
+    }
+
+    private Map<String, Object> convertirCaracteristicaPuesto(PuestoCaracteristica puestoCaracteristica) {
+        Map<String, Object> map = new java.util.LinkedHashMap<>();
+        map.put("id", puestoCaracteristica.getIdCaracteristica() != null
+                ? puestoCaracteristica.getIdCaracteristica().getId()
+                : null);
+        map.put("nombre", puestoCaracteristica.getIdCaracteristica() != null
+                ? puestoCaracteristica.getIdCaracteristica().getNombre()
+                : "");
+        map.put("nivelDeseado", puestoCaracteristica.getNivelDeseado());
+        return map;
     }
 }

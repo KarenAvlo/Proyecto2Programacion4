@@ -8,14 +8,22 @@ import './OferenteDashboard.css';
 export default function OferenteDashboard() {
     const navigate = useNavigate();
     const [perfil, setPerfil] = useState(null);
+    const [puestosRecientes, setPuestosRecientes] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         let mounted = true;
         (async () => {
             try {
-                const data = await oferenteAPI.getPerfil();
-                if (mounted) setPerfil(data);
+                const [perfilData, puestosData] = await Promise.all([
+                    oferenteAPI.getPerfil(),
+                    oferenteAPI.getPuestosRecientes(),
+                ]);
+
+                if (mounted) {
+                    setPerfil(perfilData);
+                    setPuestosRecientes(Array.isArray(puestosData) ? puestosData : []);
+                }
             } catch (error) {
                 console.error('Error:', error);
             } finally {
@@ -82,6 +90,48 @@ export default function OferenteDashboard() {
                                 <p>Error cargando el perfil</p>
                             </div>
                         )}
+
+                        <section className="puestos-privados-section">
+                            <div className="section-header">
+                                <h2>Ultimos puestos disponibles</h2>
+                                <p>Oportunidades publicas y privadas recientes disponibles para oferentes registrados.</p>
+                            </div>
+
+                            {puestosRecientes.length > 0 ? (
+                                <div className="puestos-privados-grid">
+                                    {puestosRecientes.map((puesto) => (
+                                        <article className="puesto-privado-card" key={puesto.id}>
+                                            <div className="puesto-privado-header">
+                                                <h3>{puesto.empresa || 'Empresa'}</h3>
+                                                <span className={puesto.tipoPublicacion === 'PRIVADA' ? 'badge-private' : 'badge-publica'}>
+                                                    {puesto.tipoPublicacion === 'PRIVADA' ? 'Privada' : 'Publica'}
+                                                </span>
+                                            </div>
+                                            <p className="puesto-descripcion">{puesto.descripcion}</p>
+                                            <div className="puesto-meta">
+                                                <span>{puesto.moneda} {puesto.salarioOfrecido}</span>
+                                                {puesto.fechaPublicacion && (
+                                                    <span>{new Date(puesto.fechaPublicacion).toLocaleDateString()}</span>
+                                                )}
+                                            </div>
+                                            {puesto.caracteristicas?.length > 0 && (
+                                                <ul className="puesto-caracteristicas">
+                                                    {puesto.caracteristicas.map((car) => (
+                                                        <li key={`${puesto.id}-${car.id}`}>
+                                                            {car.nombre} - Nivel {car.nivelDeseado}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </article>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="empty-state">
+                                    <p>No hay puestos recientes disponibles.</p>
+                                </div>
+                            )}
+                        </section>
                     </>
                 )}
             </main>

@@ -5,6 +5,14 @@ export const oferenteAPI = {
         return apiClient.get('/oferente/perfil');
     },
 
+    getPuestosPrivadosRecientes() {
+        return apiClient.get('/oferente/puestos/privados/recientes');
+    },
+
+    getPuestosRecientes() {
+        return apiClient.get('/oferente/puestos/recientes');
+    },
+
     // Requiere responseType 'blob' para PDFs
     async obtenerCVBlob() {
         const response = await apiClient.get('/oferente/cv/actual');
