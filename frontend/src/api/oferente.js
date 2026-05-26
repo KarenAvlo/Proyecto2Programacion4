@@ -5,9 +5,9 @@ export const oferenteAPI = {
         return apiClient.get('/oferente/perfil');
     },
 
-    //Requiere responseType 'blob' para PDFs)
-    async obtenerCVBlob(cedula) {
-        const response = await apiClient.get(`/oferente/cv/descargar/${cedula}`);
+    // Requiere responseType 'blob' para PDFs
+    async obtenerCVBlob() {
+        const response = await apiClient.get('/oferente/cv/actual');
         return response.blob();
     },
 
@@ -35,12 +35,13 @@ export const oferenteAPI = {
     },
 
     //obtiene la lista completa de caracteristicas
-    getCaracteristicas(idPadre = null) {
+    async getCaracteristicas(idPadre = null) {
         const url = idPadre
             ? `/oferente/caracteristicas?padreId=${idPadre}`
             : `/oferente/caracteristicas`;
 
-        return apiClient.get(url);
+        const data = await apiClient.get(url);
+        return Array.isArray(data) ? data : (data?.lista || []);
     }
 /*
     //Obtener categorías/características

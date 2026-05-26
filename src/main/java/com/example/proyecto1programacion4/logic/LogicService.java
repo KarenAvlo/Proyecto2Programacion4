@@ -58,7 +58,7 @@ public class LogicService {
     private PuestoCaracteristicaRepository puestoCaracteristicaRepository;
 
 
-    private final Path root = Paths.get("./uploads");
+    private final Path root = Paths.get("C:\\Users\\Kevin\\Desktop\\Progra 4, 2026\\Projecto2\\Proyecto2Progra4\\uploads");
 
 
     // --------------- INICIALIZACIÓN ----------------
@@ -383,6 +383,10 @@ public class LogicService {
         Oferente oferente = oferenteRepository.findByCedula(cedula)
                 .orElseThrow(() -> new Exception("Oferente no encontrado con cédula: " + cedula));
 
+        return obtenerArchivoCVDeOferente(oferente);
+    }
+
+    public Resource obtenerArchivoCVDeOferente(Oferente oferente) throws Exception {
         String nombreArchivo = oferente.getCurriculoPath();
 
         if (nombreArchivo == null || nombreArchivo.isEmpty()) {
@@ -391,7 +395,7 @@ public class LogicService {
         Path archivoPath = root.resolve(nombreArchivo).normalize();
         Resource recurso = new UrlResource(archivoPath.toUri());
 
-        if (recurso.exists() || recurso.isReadable()) {
+        if (recurso.exists() && recurso.isReadable()) {
             return recurso;
         } else {
             throw new Exception("No se pudo leer el archivo: " + nombreArchivo);

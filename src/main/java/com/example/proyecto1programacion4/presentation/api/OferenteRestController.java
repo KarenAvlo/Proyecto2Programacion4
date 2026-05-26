@@ -22,7 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -35,7 +37,7 @@ public class OferenteRestController {
     private final OferenteCaracteristicaRepository oferenteCaracteristicaRepository;
     private final CaracteristicaRepository caracRepo;
 
-    private final Path uploadDir = Paths.get("./uploads");
+    private final Path uploadDir = Paths.get("C:\\Users\\Kevin\\Desktop\\Progra 4, 2026\\Projecto2\\Proyecto2Progra4\\uploads");
 
     public OferenteRestController(
             LogicService logicService,
@@ -61,26 +63,45 @@ public class OferenteRestController {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(Map.of(
-                "email", oferente.getEmail(),
-                "cedula", oferente.getCedula(),
-                "nombre", oferente.getNombre(),
-                "apellido", oferente.getApellido(),
-                "nacionalidad", oferente.getNacionalidad(),
-                "telefono", oferente.getTelefono(),
-                "residencia", oferente.getResidencia(),
-                "curriculoPath", oferente.getCurriculoPath() != null ? oferente.getCurriculoPath() : ""
-        ));
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("email", valorSeguro(oferente.getEmail()));
+        response.put("cedula", valorSeguro(oferente.getCedula()));
+        response.put("nombre", valorSeguro(oferente.getNombre()));
+        response.put("apellido", valorSeguro(oferente.getApellido()));
+        response.put("nacionalidad", valorSeguro(oferente.getNacionalidad()));
+        response.put("telefono", valorSeguro(oferente.getTelefono()));
+        response.put("residencia", valorSeguro(oferente.getResidencia()));
+        response.put("curriculoPath", valorSeguro(oferente.getCurriculoPath()));
+        response.put("tieneCV", oferente.getCurriculoPath() != null && !oferente.getCurriculoPath().isBlank());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/caracteristicas")
     public ResponseEntity<Map<String, Object>> listarCaracteristicas(@RequestParam(required = false) Integer padreId) {
-        List<Caracteristica> lista = (padreId == null)
-                ? caracRepo.findByPadreIsNull()
-                : caracRepo.findByPadreId(padreId);
+        Caracteristica padre = padreId == null ? null : caracRepo.findById(padreId).orElse(null);
+
+        if (padreId != null && padre == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Caracteristica> lista = (padre == null)
+                ? caracRepo.findByIdPadreIsNull()
+                : caracRepo.findByIdPadre(padre);
+
+        List<Map<String, Object>> resultado = lista.stream()
+                .map(caracteristica -> {
+                    Map<String, Object> item = new java.util.LinkedHashMap<>();
+                    item.put("id", caracteristica.getId());
+                    item.put("nombre", caracteristica.getNombre());
+                    item.put("idPadre", caracteristica.getIdPadre() != null ? caracteristica.getIdPadre().getId() : null);
+                    item.put("tieneHijos", caracRepo.existsByIdPadre(caracteristica));
+                    return item;
+                })
+                .toList();
 
         Map<String, Object> response = new HashMap<>();
-        response.put("lista", lista); // Esto coincide con lo que el Front espera
+        response.put("lista", resultado);
         return ResponseEntity.ok(response);
     }
 
@@ -136,7 +157,9 @@ public class OferenteRestController {
             // Guardar las nuevas habilidades
             if (request.getHabilidades() != null && !request.getHabilidades().isEmpty()) {
                 for (HabilidadRequest.HabilidadItem habilidad : request.getHabilidades()) {
-                    OferenteCaracteristica oc = new OferenteCaracteristica();
+                    OferenteCaracteristica oc = oferenteCaracteristicaRepository
+                            .findByCedulaOferenteEmailAndIdCaracteristicaId(email, habilidad.getCaracteristicaId())
+                            .orElseGet(OferenteCaracteristica::new);
                     oc.setCedulaOferente(oferente);
                     oc.setNivel(habilidad.getNivel());
                     logicService.guardarOferenteCaracteristica(oc, habilidad.getCaracteristicaId());
@@ -162,8 +185,18 @@ public class OferenteRestController {
             @RequestParam("archivo") MultipartFile archivo
     ) {
         try {
-            // Validar que sea PDF
-            if (!archivo.getContentType().equals("application/pdf")) {
+            if (archivo == null || archivo.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "mensaje", "Debe seleccionar un archivo PDF."
+                ));
+            }
+
+            String nombreOriginal = archivo.getOriginalFilename() != null ? archivo.getOriginalFilename() : "";
+            String contentType = archivo.getContentType() != null ? archivo.getContentType() : "";
+            boolean esPdf = MediaType.APPLICATION_PDF_VALUE.equalsIgnoreCase(contentType)
+                    || nombreOriginal.toLowerCase(Locale.ROOT).endsWith(".pdf");
+
+            if (!esPdf) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "mensaje", "Solo se permiten archivos PDF."
                 ));
@@ -182,7 +215,9 @@ public class OferenteRestController {
             Files.createDirectories(uploadDir);
 
             // Generar nombre único para el archivo
-            String nombreArchivo = "cv_" + oferente.getCedula() + "_" + UUID.randomUUID() + ".pdf";
+            String identificador = (oferente.getEmail() != null ? oferente.getEmail() : oferente.getCedula())
+                    .replaceAll("[^a-zA-Z0-9._-]", "_");
+            String nombreArchivo = identificador + "_cv_" + UUID.randomUUID() + ".pdf";
             Path rutaArchivo = uploadDir.resolve(nombreArchivo);
 
             // Guardar archivo
@@ -203,6 +238,10 @@ public class OferenteRestController {
         }
     }
 
+    private String valorSeguro(String valor) {
+        return valor != null ? valor : "";
+    }
+
     /**
      * Descargar CV del oferente
      */
@@ -216,11 +255,36 @@ public class OferenteRestController {
             }
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"cv_" + cedula + ".pdf\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"cv_" + cedula + ".pdf\"")
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
                     .body(resource);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/cv/actual")
+    public ResponseEntity<?> descargarCVActual(Authentication authentication) {
+        try {
+            String email = authentication.getName();
+            Oferente oferente = logicService.buscarOferentePorEmail(email);
+
+            if (oferente == null) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(
+                        "mensaje", "Oferente no encontrado."
+                ));
+            }
+
+            Resource resource = logicService.obtenerArchivoCVDeOferente(oferente);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + oferente.getCurriculoPath() + "\"")
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+                    .body(resource);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                    "mensaje", ex.getMessage()
+            ));
         }
     }
 

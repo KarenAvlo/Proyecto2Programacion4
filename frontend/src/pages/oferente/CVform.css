@@ -105,16 +105,34 @@
   color: #a0aec0;
 }
 
+.cv-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .btn-view-cv {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid #3182ce;
   color: #3182ce;
-  text-decoration: none;
+  background: #fff;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-view-cv {
+  color: #fff;
+  background: #3182ce;
 }
 
 .btn-view-cv:hover {
-  text-decoration: underline;
+  background: #2b6cb0;
 }
 
 /* ÁREA DE SUBIDA (INPUT FILE) */
