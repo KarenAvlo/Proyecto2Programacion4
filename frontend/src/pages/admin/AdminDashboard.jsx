@@ -16,7 +16,6 @@ export default function AdminDashboard() {
             const [empresas, oferentes] = await Promise.all([
                 adminAPI.getEmpresasPendientes(),
                 adminAPI.getOferentesPendientes(),
-                adminAPI.getCaracteristicas(),
             ]);
 
             setEmpresasPendientes(empresas.length);
@@ -30,7 +29,6 @@ export default function AdminDashboard() {
 
     useEffect(() => {
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

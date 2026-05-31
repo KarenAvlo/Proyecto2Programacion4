@@ -44,7 +44,7 @@ export default function AdminCaracteristicas() {
                 try {
                     const hijas = await adminAPI.getPorPadre(cat.id);
                     hijosMap[cat.id] = hijas.length > 0;
-                } catch (error) {
+                } catch {
                     hijosMap[cat.id] = false;
                 }
             }

@@ -11,6 +11,7 @@ import com.example.proyecto1programacion4.logic.Caracteristica;
 import com.example.proyecto1programacion4.logic.Puesto;
 import com.example.proyecto1programacion4.logic.PuestoCaracteristica;
 import com.example.proyecto1programacion4.presentation.api.dto.HabilidadRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,20 +42,22 @@ public class OferenteRestController {
     private final CaracteristicaRepository caracRepo;
     private final PuestoRepository puestoRepository;
 
-    private final Path uploadDir = Paths.get("C:\\Users\\Kevin\\Desktop\\Progra 4, 2026\\Projecto2\\Proyecto2Progra4\\uploads");
+    private final Path uploadDir;
 
     public OferenteRestController(
             LogicService logicService,
             OferenteRepository oferenteRepository,
             OferenteCaracteristicaRepository oferenteCaracteristicaRepository,
             CaracteristicaRepository caracRepo,
-            PuestoRepository puestoRepository
+            PuestoRepository puestoRepository,
+            @Value("${app.upload.dir:uploads}") String uploadDir
     ) {
         this.logicService = logicService;
         this.oferenteRepository = oferenteRepository;
         this.oferenteCaracteristicaRepository = oferenteCaracteristicaRepository;
         this.caracRepo = caracRepo;
         this.puestoRepository = puestoRepository;
+        this.uploadDir = Paths.get(uploadDir).toAbsolutePath().normalize();
     }
 
     /**
