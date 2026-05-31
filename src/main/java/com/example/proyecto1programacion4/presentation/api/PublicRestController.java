@@ -102,7 +102,7 @@ public class PublicRestController {
     @GetMapping("/api/public/puestos/recientes")
     public List<Map<String, Object>> puestosRecientes() {
         List<Puesto> puestos = puestoRepository
-                .findTop5ByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PUBLICA");
+                .findTop3ByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PUBLICA");
 
         return puestos.stream()
                 .map(this::convertirPuesto)
