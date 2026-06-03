@@ -30,6 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Comparator;
 import java.util.UUID;
 
 @RestController
@@ -345,14 +346,35 @@ public class OferenteRestController {
 
     @GetMapping("/puestos/recientes")
     public ResponseEntity<List<Map<String, Object>>> listarPuestosRecientesParaOferente() {
-        List<Puesto> publicos = puestoRepository
-                .findTop3ByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PUBLICA");
-        List<Puesto> privados = puestoRepository
-                .findTop3ByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PRIVADA");
+        List<Puesto> puestos = puestoRepository.findActivosByTiposPublicacion(List.of("PUBLICA", "PRIVADA"));
 
-        List<Map<String, Object>> resultado = new java.util.ArrayList<>();
-        resultado.addAll(publicos.stream().map(this::convertirPuesto).toList());
-        resultado.addAll(privados.stream().map(this::convertirPuesto).toList());
+        List<Map<String, Object>> resultado = puestos.stream()
+                .map(this::convertirPuesto)
+                .toList();
+
+        return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/puestos/buscar")
+    public ResponseEntity<List<Map<String, Object>>> buscarPuestosDisponibles(
+            @RequestParam(required = false) List<Integer> caracteristicaIds,
+            @RequestParam(required = false) String moneda
+    ) {
+        List<String> tipos = List.of("PUBLICA", "PRIVADA");
+        List<Puesto> puestos;
+
+        if (caracteristicaIds == null || caracteristicaIds.isEmpty()) {
+            puestos = puestoRepository
+                    .findActivosByTiposPublicacion(tipos);
+        } else {
+            puestos = puestoRepository.buscarPorTiposYCaracteristicas(tipos, caracteristicaIds);
+        }
+
+        List<Map<String, Object>> resultado = puestos.stream()
+                .filter(p -> moneda == null || moneda.isBlank() || moneda.equalsIgnoreCase(p.getMoneda()))
+                .sorted(Comparator.comparing(Puesto::getFechaPublicacion, Comparator.nullsLast(Comparator.reverseOrder())))
+                .map(this::convertirPuesto)
+                .toList();
 
         return ResponseEntity.ok(resultado);
     }

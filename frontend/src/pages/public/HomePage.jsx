@@ -1,26 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { publicAPI } from '../../api/public';
+import { useAuth } from '../../auth/useAuth';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import './HomePage.css';
 
 export default function HomePage() {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [puestos, setPuestos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [hoveredPuesto, setHoveredPuesto] = useState(null);
+    const mostrarPrivados = Boolean(user);
 
     useEffect(() => {
         fetchPuestos();
-    }, []);
+    }, [mostrarPrivados]);
 
     const fetchPuestos = async () => {
+        setLoading(true);
         try {
             const data = await publicAPI.getPuestosRecientes();
             setPuestos(data);
         } catch (error) {
             console.error('Error:', error);
+            setPuestos([]);
         } finally {
             setLoading(false);
         }
@@ -43,8 +48,12 @@ export default function HomePage() {
                 </section>
 
                 <section className="recent-puestos">
-                    <h2>Últimos Puestos Publicados</h2>
-                    <p className="subtitle">Descubre las oportunidades más recientes</p>
+                    <h2>Ultimos Puestos Publicados</h2>
+                    <p className="subtitle">
+                        {mostrarPrivados
+                            ? 'Descubre oportunidades publicas y privadas recientes'
+                            : 'Descubre las oportunidades publicas mas recientes'}
+                    </p>
 
                     {loading ? (
                         <div className="loading">Cargando puestos...</div>
@@ -63,24 +72,26 @@ export default function HomePage() {
                                 >
                                     <div className="puesto-header">
                                         <h3>{puesto.empresa}</h3>
-                                        <span className="badge-public">Pública</span>
+                                        <span className={puesto.tipoPublicacion === 'PRIVADA' ? 'badge-private' : 'badge-public'}>
+                                            {puesto.tipoPublicacion === 'PRIVADA' ? 'Privada' : 'Publica'}
+                                        </span>
                                     </div>
 
                                     <div className="puesto-body">
                                         <p className="puesto-descripcion">{puesto.descripcion}</p>
                                         <div className="puesto-meta">
-                      <span className="salary">
-                        {puesto.moneda} {puesto.salarioOfrecido}
-                      </span>
+                                            <span className="salary">
+                                                {puesto.moneda} {puesto.salarioOfrecido}
+                                            </span>
                                             <span className="fecha">
-                        {new Date(puesto.fechaPublicacion).toLocaleDateString()}
-                      </span>
+                                                {new Date(puesto.fechaPublicacion).toLocaleDateString()}
+                                            </span>
                                         </div>
                                     </div>
 
                                     {hoveredPuesto === puesto.id && (
                                         <div className="puesto-details">
-                                            <h4>Características Requeridas:</h4>
+                                            <h4>Caracteristicas Requeridas:</h4>
                                             {puesto.caracteristicas && puesto.caracteristicas.length > 0 ? (
                                                 <ul>
                                                     {puesto.caracteristicas.map((car, idx) => (
@@ -90,7 +101,7 @@ export default function HomePage() {
                                                     ))}
                                                 </ul>
                                             ) : (
-                                                <p className="no-caracteristicas">Sin características específicas</p>
+                                                <p className="no-caracteristicas">Sin caracteristicas especificas</p>
                                             )}
                                         </div>
                                     )}

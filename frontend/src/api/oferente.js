@@ -13,6 +13,21 @@ export const oferenteAPI = {
         return apiClient.get('/oferente/puestos/recientes');
     },
 
+    buscarPuestos({ caracteristicaIds = [], moneda = '' } = {}) {
+        const params = new URLSearchParams();
+
+        if (moneda) {
+            params.append('moneda', moneda);
+        }
+
+        caracteristicaIds.forEach(id => {
+            params.append('caracteristicaIds', id);
+        });
+
+        const query = params.toString();
+        return apiClient.get(`/oferente/puestos/buscar${query ? `?${query}` : ''}`);
+    },
+
     // Requiere responseType 'blob' para PDFs
     async obtenerCVBlob() {
         const response = await apiClient.get('/oferente/cv/actual');

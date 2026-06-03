@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { publicAPI } from '../../api/public';
+import { useAuth } from '../../auth/useAuth';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import './BuscarPuestos.css';
 
 export default function BuscarPuestos() {
+    const { user } = useAuth();
     const [categorias, setCategorias] = useState([]);
     const [puestos, setPuestos] = useState([]);
     const [moneda, setMoneda] = useState('');
@@ -13,6 +15,7 @@ export default function BuscarPuestos() {
     const [loadingResultados, setLoadingResultados] = useState(false);
     const [busquedaRealizada, setBusquedaRealizada] = useState(false);
     const [error, setError] = useState('');
+    const mostrarPrivados = Boolean(user);
 
     const totalFiltros = useMemo(() => {
         return seleccionadas.length + (moneda ? 1 : 0);
@@ -82,7 +85,11 @@ export default function BuscarPuestos() {
                     <div className="search-header">
                         <div>
                             <h1>Buscar puestos por caracteristicas</h1>
-                            <p>Filtra oportunidades publicas por moneda y habilidades requeridas.</p>
+                            <p>
+                                {mostrarPrivados
+                                    ? 'Filtra oportunidades publicas y privadas por moneda y habilidades requeridas.'
+                                    : 'Filtra oportunidades publicas por moneda y habilidades requeridas.'}
+                            </p>
                         </div>
                         {totalFiltros > 0 && (
                             <span className="filter-count">{totalFiltros} filtros</span>
@@ -158,7 +165,9 @@ export default function BuscarPuestos() {
                                     <article className="puesto-card" key={puesto.id}>
                                         <div className="puesto-header">
                                             <h3>{puesto.empresa || 'Empresa'}</h3>
-                                            <span className="badge-public">Publica</span>
+                                            <span className={puesto.tipoPublicacion === 'PRIVADA' ? 'badge-private' : 'badge-public'}>
+                                                {puesto.tipoPublicacion === 'PRIVADA' ? 'Privada' : 'Publica'}
+                                            </span>
                                         </div>
 
                                         <p className="puesto-descripcion">{puesto.descripcion}</p>

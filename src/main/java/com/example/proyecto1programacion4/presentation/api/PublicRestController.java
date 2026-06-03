@@ -10,6 +10,8 @@ import com.example.proyecto1programacion4.logic.PuestoCaracteristica;
 import com.example.proyecto1programacion4.presentation.api.dto.EmpresaRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -100,9 +102,11 @@ public class PublicRestController {
 
 
     @GetMapping("/api/public/puestos/recientes")
-    public List<Map<String, Object>> puestosRecientes() {
-        List<Puesto> puestos = puestoRepository
-                .findTop3ByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PUBLICA");
+    public List<Map<String, Object>> puestosRecientes(Authentication authentication) {
+        List<String> tipos = tiposVisibles(authentication);
+        List<Puesto> puestos = usuarioLogueado(authentication)
+                ? puestoRepository.findActivosByTiposPublicacion(tipos)
+                : puestoRepository.findTop3ByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PUBLICA");
 
         return puestos.stream()
                 .map(this::convertirPuesto)
@@ -112,21 +116,36 @@ public class PublicRestController {
     @GetMapping("/api/public/puestos/buscar")
     public List<Map<String, Object>> buscarPuestos(
             @RequestParam(required = false) List<Integer> caracteristicaIds,
-            @RequestParam(required = false) String moneda
+            @RequestParam(required = false) String moneda,
+            Authentication authentication
     ) {
+        List<String> tipos = tiposVisibles(authentication);
         List<Puesto> puestos;
 
         if (caracteristicaIds == null || caracteristicaIds.isEmpty()) {
-            puestos = puestoRepository
-                    .findByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PUBLICA");
+            puestos = usuarioLogueado(authentication)
+                    ? puestoRepository.findActivosByTiposPublicacion(tipos)
+                    : puestoRepository.findByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PUBLICA");
         } else {
-            puestos = puestoRepository.buscarPublicosPorCaracteristicas("PUBLICA", caracteristicaIds);
+            puestos = usuarioLogueado(authentication)
+                    ? puestoRepository.buscarPorTiposYCaracteristicas(tipos, caracteristicaIds)
+                    : puestoRepository.buscarPublicosPorCaracteristicas("PUBLICA", caracteristicaIds);
         }
 
         return puestos.stream()
                 .filter(p -> moneda == null || moneda.isBlank() || moneda.equalsIgnoreCase(p.getMoneda()))
                 .map(this::convertirPuesto)
                 .toList();
+    }
+
+    private List<String> tiposVisibles(Authentication authentication) {
+        return usuarioLogueado(authentication) ? List.of("PUBLICA", "PRIVADA") : List.of("PUBLICA");
+    }
+
+    private boolean usuarioLogueado(Authentication authentication) {
+        return authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken);
     }
 
     @GetMapping("/api/public/caracteristicas")

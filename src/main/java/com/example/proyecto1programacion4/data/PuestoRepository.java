@@ -29,7 +29,30 @@ public interface PuestoRepository extends JpaRepository<Puesto, Integer> {
             List<Integer> caracteristicaIds
     );
 
+    @Query("""
+            SELECT DISTINCT p
+            FROM Puesto p
+            JOIN p.puestoCaracteristicas pc
+            WHERE UPPER(p.tipoPublicacion) IN :tiposPublicacion
+              AND p.activo = true
+              AND pc.idCaracteristica.id IN :caracteristicaIds
+            ORDER BY p.fechaPublicacion DESC
+            """)
+    List<Puesto> buscarPorTiposYCaracteristicas(
+            List<String> tiposPublicacion,
+            List<Integer> caracteristicaIds
+    );
+
     List<Puesto> findByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc(String tipoPublicacion);
+
+    @Query("""
+            SELECT p
+            FROM Puesto p
+            WHERE UPPER(p.tipoPublicacion) IN :tiposPublicacion
+              AND p.activo = true
+            ORDER BY p.fechaPublicacion DESC
+            """)
+    List<Puesto> findActivosByTiposPublicacion(List<String> tiposPublicacion);
 
     List<Puesto> findTop5ByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc(String tipoPublicacion);
 
