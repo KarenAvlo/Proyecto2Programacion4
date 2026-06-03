@@ -198,6 +198,16 @@
     white-space: nowrap;
 }
 
+.badge-private {
+    background-color: #6f42c1;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
 .puesto-descripcion {
     color: #4a5568;
     line-height: 1.5;

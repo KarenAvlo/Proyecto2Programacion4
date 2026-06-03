@@ -3,7 +3,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 
 export const apiClient = {
     async request(method, endpoint, data = null, options = {}) {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token') || localStorage.getItem('token');
         const headers = {
             'Content-Type': 'application/json',
             ...options.headers,
@@ -20,7 +20,13 @@ export const apiClient = {
         };
 
         if (data && (method === 'POST' || method === 'PUT')) {
-            config.body = JSON.stringify(data);
+            if (data instanceof FormData) {
+                config.body = data;
+                // Dejamos que el navegador decida el Content-Type y su boundary
+                delete headers['Content-Type'];
+            } else {
+                config.body = JSON.stringify(data);
+            }
         }
 
         try {

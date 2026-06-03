@@ -111,6 +111,17 @@
     margin-left: 10px;
 }
 
+.badge-private {
+    background-color: #6f42c1;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    margin-left: 10px;
+}
+
 .puesto-body {
     display: flex;
     flex-direction: column;

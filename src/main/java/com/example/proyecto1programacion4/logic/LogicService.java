@@ -4,6 +4,7 @@ import com.example.proyecto1programacion4.data.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +59,12 @@ public class LogicService {
     private PuestoCaracteristicaRepository puestoCaracteristicaRepository;
 
 
-    private final Path root = Paths.get("./uploads");
+    @Value("${app.upload.dir:uploads}")
+    private String uploadDir;
+
+    private Path uploadRoot() {
+        return Paths.get(uploadDir).toAbsolutePath().normalize();
+    }
 
 
     // --------------- INICIALIZACIÓN ----------------
@@ -383,15 +389,19 @@ public class LogicService {
         Oferente oferente = oferenteRepository.findByCedula(cedula)
                 .orElseThrow(() -> new Exception("Oferente no encontrado con cédula: " + cedula));
 
+        return obtenerArchivoCVDeOferente(oferente);
+    }
+
+    public Resource obtenerArchivoCVDeOferente(Oferente oferente) throws Exception {
         String nombreArchivo = oferente.getCurriculoPath();
 
         if (nombreArchivo == null || nombreArchivo.isEmpty()) {
             throw new Exception("El oferente no tiene un CV registrado.");
         }
-        Path archivoPath = root.resolve(nombreArchivo).normalize();
+        Path archivoPath = uploadRoot().resolve(nombreArchivo).normalize();
         Resource recurso = new UrlResource(archivoPath.toUri());
 
-        if (recurso.exists() || recurso.isReadable()) {
+        if (recurso.exists() && recurso.isReadable()) {
             return recurso;
         } else {
             throw new Exception("No se pudo leer el archivo: " + nombreArchivo);

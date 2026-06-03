@@ -1,134 +1,117 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { oferenteAPI } from '../../api/oferente';
 import './OferenteHabilidades.css';
 
 export default function OferenteHabilidades() {
-    // --- ESTADOS ---
     const [misHabilidades, setMisHabilidades] = useState([]);
-    const [subcategorias, setSubcategorias] = useState([]);
+    const [opcionesActuales, setOpcionesActuales] = useState([]);
     const [ruta, setRuta] = useState([]);
-    const [categoriaActual, setCategoriaActual] = useState(null);
-
-    // Estados del formulario
     const [habilidadSeleccionada, setHabilidadSeleccionada] = useState('');
-    const [nivel, setNivel] = useState('4');
-    const [loading, setLoading] = useState(true);
+    const [nivel, setNivel] = useState('3');
+    const [loadingHabilidades, setLoadingHabilidades] = useState(true);
+    const [loadingOpciones, setLoadingOpciones] = useState(true);
+    const [guardando, setGuardando] = useState(false);
+    const [mensaje, setMensaje] = useState(null);
+    const [error, setError] = useState(null);
 
-    // Carga inicial de datos (Habilidades del usuario y categorías raíz)
-    const cargarDatosIniciales = async () => {
-        setLoading(true);
+    const cargarMisHabilidades = useCallback(async () => {
+        setLoadingHabilidades(true);
         try {
-            // TODO: reemplazar por llamadas reales (oferenteAPI.getHabilidades())
-            const habilidadesMock = [
-                { id: 1, idCaracteristica: { id: 101, nombre: 'React' }, nivel: 5 },
-                { id: 2, idCaracteristica: { id: 102, nombre: 'Java Boot' }, nivel: 4 }
-            ];
-            setMisHabilidades(habilidadesMock);
-        } catch (error) {
-            console.error("Error al cargar las habilidades del usuario:", error);
+            const data = await oferenteAPI.getHabilidades();
+            setMisHabilidades(Array.isArray(data) ? data : (data?.habilidades || data?.lista || []));
+        } catch (err) {
+            console.error('Error al cargar habilidades del oferente:', err);
+            setMisHabilidades([]);
+            setError('No se pudieron cargar tus habilidades registradas.');
         } finally {
-            setLoading(false);
+            setLoadingHabilidades(false);
         }
-    };
+    }, []);
 
-    const cargarSubcategorias = async (idPadre) => {
+    const cargarOpciones = useCallback(async (padreId = null) => {
+        setLoadingOpciones(true);
+        setError(null);
         try {
-            // TODO: reemplazar por llamada al backend (adminAPI.getPorPadre)
-            if (!idPadre) {
-                setSubcategorias([
-                    { id: 10, nombre: 'Lenguajes de Programación' },
-                    { id: 20, nombre: 'Bases de Datos' },
-                    { id: 30, nombre: 'Habilidades Blandas' }
-                ]);
-                setRuta([]);
-            } else {
-                if (idPadre === 10) {
-                    setSubcategorias([
-                        { id: 101, nombre: 'JavaScript' },
-                        { id: 102, nombre: 'Java' },
-                        { id: 103, nombre: 'Python' }
-                    ]);
-                    setRuta([{ id: 10, nombre: 'Lenguajes de Programación' }]);
-                } else if (idPadre === 20) {
-                    setSubcategorias([
-                        { id: 201, nombre: 'PostgreSQL' },
-                        { id: 202, nombre: 'MongoDB' }
-                    ]);
-                    setRuta([{ id: 20, nombre: 'Bases de Datos' }]);
-                } else {
-                    setSubcategorias([]);
-                }
-            }
-
+            const data = await oferenteAPI.getCaracteristicas(padreId);
+            setOpcionesActuales(Array.isArray(data) ? data : []);
             setHabilidadSeleccionada('');
-        } catch (error) {
-            console.error("Error al mapear subcategorías:", error);
+        } catch (err) {
+            console.error('Error al cargar caracteristicas:', err);
+            setOpcionesActuales([]);
+            setError('No se pudieron cargar las caracteristicas disponibles.');
+        } finally {
+            setLoadingOpciones(false);
         }
-    };
-
-    // Carga inicial y reaccionar a cambios de categoría (usar IIFE async para evitar warnings)
-    useEffect(() => {
-        let mounted = true;
-        (async () => {
-            try {
-                await cargarDatosIniciales();
-            } catch (e) {
-                console.error(e);
-            } finally {
-                if (mounted) {
-                    // cargarDatosIniciales ya maneja loading
-                }
-            }
-        })();
-        return () => { mounted = false; };
     }, []);
 
     useEffect(() => {
-        let mounted = true;
-        (async () => {
-            try {
-                await cargarSubcategorias(categoriaActual);
-            } catch (e) {
-                console.error(e);
-            } finally {
-                if (mounted) {
-                    // noop
-                }
-            }
-        })();
-        return () => { mounted = false; };
-    }, [categoriaActual]);
+        void Promise.resolve().then(() => {
+            cargarMisHabilidades();
+            cargarOpciones(null);
+        });
+    }, [cargarMisHabilidades, cargarOpciones]);
 
-    const handleEntrarCategoria = (id) => {
-        setCategoriaActual(id);
+    const opcionSeleccionada = useMemo(
+        () => opcionesActuales.find((opcion) => String(opcion.id) === String(habilidadSeleccionada)),
+        [habilidadSeleccionada, opcionesActuales]
+    );
+
+    const handleEntrarCategoria = (categoria) => {
+        if (!categoria.tieneHijos) return;
+        setRuta((prev) => [...prev, categoria]);
+        cargarOpciones(categoria.id);
     };
 
-    const handleIrARaices = (e) => {
-        e.preventDefault();
-        setCategoriaActual(null);
+    const handleIrARaices = () => {
+        setRuta([]);
+        cargarOpciones(null);
+    };
+
+    const handleIrACategoriaDeRuta = (index) => {
+        const nuevaRuta = ruta.slice(0, index + 1);
+        setRuta(nuevaRuta);
+        cargarOpciones(nuevaRuta[index].id);
     };
 
     const handleGuardarHabilidad = async (e) => {
         e.preventDefault();
-        if (!habilidadSeleccionada) return alert("Seleccione una característica válida.");
 
-        const nuevaHabilidad = {
-            idCaracteristica: habilidadSeleccionada,
-            nivel: parseInt(nivel, 10)
+        if (!habilidadSeleccionada) {
+            setError('Selecciona una caracteristica antes de guardar.');
+            return;
+        }
+
+        const nivelNumerico = Number(nivel);
+        if (Number.isNaN(nivelNumerico) || nivelNumerico < 1 || nivelNumerico > 5) {
+            setError('El nivel debe estar entre 1 y 5.');
+            return;
+        }
+
+        const payload = {
+            habilidades: [
+                {
+                    caracteristicaId: Number(habilidadSeleccionada),
+                    nivel: nivelNumerico,
+                },
+            ],
         };
 
+        setGuardando(true);
+        setMensaje(null);
+        setError(null);
         try {
-            console.log("Enviando al backend:", nuevaHabilidad);
-            // Aquí llamarías a tu API (e.g., await oferenteAPI.saveHabilidad(nuevaHabilidad))
-
-            // Recargamos o refrescamos la lista localmente para ver el cambio instantáneo
-            cargarDatosIniciales();
-            // Limpieza básica del formulario
+            const response = await oferenteAPI.saveHabilidad(payload);
+            await cargarMisHabilidades();
             setHabilidadSeleccionada('');
-            setNivel('4');
-        } catch (error) {
-            console.error("Error al almacenar la nueva habilidad:", error);
+            setNivel('3');
+            setMensaje(response?.mensaje || 'Habilidad guardada correctamente.');
+        } catch (err) {
+            console.error('Error al guardar habilidad:', err);
+            setError(err.message || 'Hubo un error al guardar la habilidad.');
+        } finally {
+            setGuardando(false);
         }
     };
 
@@ -140,120 +123,143 @@ export default function OferenteHabilidades() {
                 <main className="oferente-main-content">
                     <h2>Mis habilidades</h2>
 
-                    {loading ? (
-                        <div className="loading-spinner">Cargando tu perfil de habilidades...</div>
-                    ) : (
-                        <div className="main-skills-container">
+                    {mensaje && <div className="skills-alert skills-alert-success">{mensaje}</div>}
+                    {error && <div className="skills-alert skills-alert-error">{error}</div>}
 
-                            {/* TABLA DE MIS HABILIDADES */}
-                            <div className="panel panel-habilidades">
-                                <table className="skills-table">
-                                    <thead>
+                    <div className="main-skills-container">
+                        <section className="panel panel-habilidades" aria-label="Habilidades registradas">
+                            <h3 className="panel-title">Registradas</h3>
+                            <table className="skills-table">
+                                <thead>
+                                <tr>
+                                    <th>Caracteristica</th>
+                                    <th className="text-right">Nivel</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {loadingHabilidades ? (
                                     <tr>
-                                        <th>Característica</th>
-                                        <th className="text-right">Nivel</th>
+                                        <td colSpan="2" className="text-muted text-center">Cargando...</td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                    {misHabilidades.map((h) => (
-                                        <tr key={h.id}>
-                                            <td>{h.idCaracteristica.nombre}</td>
+                                ) : misHabilidades.length > 0 ? (
+                                    misHabilidades.map((h) => (
+                                        <tr key={h.id || `${h.caracteristicaId}-${h.nivel}`}>
+                                            <td>{h.caracteristicaNombre || h.caracteristica?.nombre || 'Sin nombre'}</td>
                                             <td className="text-right skill-level-badge">{h.nivel}</td>
                                         </tr>
-                                    ))}
-                                    {misHabilidades.length === 0 && (
-                                        <tr>
-                                            <td colSpan="2" className="text-muted text-center">
-                                                Aún no has registrado ninguna habilidad.
-                                            </td>
-                                        </tr>
-                                    )}
-                                    </tbody>
-                                </table>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="2" className="text-muted text-center">
+                                            Aun no has registrado ninguna habilidad.
+                                        </td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </table>
+                        </section>
+
+                        <section className="panel panel-navegacion" aria-label="Explorador de caracteristicas">
+                            <h3 className="panel-title">Explorar</h3>
+                            <p className="breadcrumb-title">Ruta</p>
+                            <div className="skills-breadcrumb">
+                                <button type="button" onClick={handleIrARaices} className="breadcrumb-link-btn">
+                                    Raiz
+                                </button>
+                                {ruta.map((r, index) => (
+                                    <span key={r.id} className="breadcrumb-segment">
+                                        <span className="breadcrumb-separator">/</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleIrACategoriaDeRuta(index)}
+                                            className="breadcrumb-link-btn"
+                                        >
+                                            {r.nombre}
+                                        </button>
+                                    </span>
+                                ))}
                             </div>
 
-                            {/* EXPLORADOR DE NAVEGACIÓN */}
-                            <div className="panel panel-navegacion">
-                                <p className="breadcrumb-title">Ruta:</p>
-                                <div className="skills-breadcrumb">
-                                    <a href="#" onClick={handleIrARaices} className="breadcrumb-item">
-                                        Raíces
-                                    </a>
-                                    {ruta.map((r) => (
-                                        <span key={r.id}>
-                                            <span className="breadcrumb-separator"> / </span>
-                                            <button
-                                                onClick={() => handleEntrarCategoria(r.id)}
-                                                className="breadcrumb-link-btn"
-                                            >
-                                                {r.nombre}
-                                            </button>
-                                        </span>
-                                    ))}
-                                </div>
-
-                                <div className="subcategories-list">
-                                    {Array.isArray(subcategorias) && subcategorias.length > 0
-                                        ? subcategorias.map((sub) => (
-                                            <div key={sub.id} className="subcategory-row-card">
-                                                <span className="subcategory-name">{sub.nombre}</span>
+                            <div className="subcategories-list">
+                                {loadingOpciones ? (
+                                    <p className="text-muted">Cargando opciones...</p>
+                                ) : opcionesActuales.length > 0 ? (
+                                    opcionesActuales.map((opcion) => (
+                                        <div key={opcion.id} className="subcategory-row-card">
+                                            <span className="subcategory-name">{opcion.nombre}</span>
+                                            {opcion.tieneHijos && (
                                                 <button
-                                                    onClick={() => handleEntrarCategoria(sub.id)}
+                                                    type="button"
+                                                    onClick={() => handleEntrarCategoria(opcion)}
                                                     className="btn-entrar"
                                                 >
                                                     Entrar
                                                 </button>
-                                            </div>
-                                        ))
-                                        : null}
-                                </div>
+                                            )}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-muted">No hay caracteristicas hijas en este nivel.</p>
+                                )}
                             </div>
+                        </section>
 
-                            {/* FORMULARIO DE AGREGAR */}
-                            <div className="panel panel-agregar">
-                                <form onSubmit={handleGuardarHabilidad}>
-                                    <h4 className="form-title">Agregar Habilidad</h4>
+                        <section className="panel panel-agregar" aria-label="Agregar habilidad">
+                            <form onSubmit={handleGuardarHabilidad}>
+                                <h3 className="panel-title">Agregar o actualizar</h3>
 
-                                    <div className="form-group-skills">
-                                        <label htmlFor="idCaracteristica">Característica</label>
-                                        <select
-                                            id="idCaracteristica"
-                                            value={habilidadSeleccionada}
-                                            onChange={(e) => setHabilidadSeleccionada(e.target.value)}
-                                            required
-                                        >
-                                            <option value="" disabled>
-                                                -- Seleccione una --
+                                <div className="form-group-skills">
+                                    <label htmlFor="idCaracteristica">Caracteristica</label>
+                                    <select
+                                        id="idCaracteristica"
+                                        value={habilidadSeleccionada}
+                                        onChange={(e) => setHabilidadSeleccionada(e.target.value)}
+                                        required
+                                        disabled={loadingOpciones || opcionesActuales.length === 0}
+                                    >
+                                        <option value="" disabled>
+                                            Seleccione una opcion
+                                        </option>
+                                        {opcionesActuales.map((opt) => (
+                                            <option key={opt.id} value={opt.id}>
+                                                {opt.nombre}
                                             </option>
-                                            {subcategorias.map((opt) => (
-                                                <option key={opt.id} value={opt.id}>
-                                                    {opt.nombre}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
+                                        ))}
+                                    </select>
+                                </div>
 
-                                    <div className="form-group-skills">
-                                        <label htmlFor="nivel">Nivel (1-5)</label>
-                                        <input
-                                            id="nivel"
-                                            type="number"
-                                            min="1"
-                                            max="5"
-                                            value={nivel}
-                                            onChange={(e) => setNivel(e.target.value)}
-                                            required
-                                        />
-                                    </div>
+                                <div className="form-group-skills">
+                                    <label htmlFor="nivel">Nivel</label>
+                                    <select
+                                        id="nivel"
+                                        value={nivel}
+                                        onChange={(e) => setNivel(e.target.value)}
+                                        required
+                                    >
+                                        {[1, 2, 3, 4, 5].map((valor) => (
+                                            <option key={valor} value={valor}>
+                                                {valor}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
 
-                                    <button type="submit" className="btn-agregar">
-                                        Guardar
-                                    </button>
-                                </form>
-                            </div>
+                                {opcionSeleccionada && (
+                                    <p className="selected-skill-note">
+                                        Se guardara: <strong>{opcionSeleccionada.nombre}</strong>
+                                    </p>
+                                )}
 
-                        </div>
-                    )}
+                                <button
+                                    type="submit"
+                                    className="btn-agregar"
+                                    disabled={guardando || loadingOpciones || opcionesActuales.length === 0}
+                                >
+                                    {guardando ? 'Guardando...' : 'Guardar habilidad'}
+                                </button>
+                            </form>
+                        </section>
+                    </div>
                 </main>
 
                 <Footer />

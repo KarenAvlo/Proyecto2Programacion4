@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { empresaAPI } from '../../api/empresa';
 import Navbar from '../../components/Navbar';
@@ -14,7 +14,7 @@ export default function CandidatoMatchView() {
     const [loading, setLoading] = useState(true);
 
     // Consulta al backend usando la función de empresa.js
-    const obtenerCandidatosMatch = async () => {
+    const obtenerCandidatosMatch = useCallback(async () => {
         setLoading(true);
         try {
             const data = await empresaAPI.buscarCandidatos(puestoId);
@@ -24,14 +24,14 @@ export default function CandidatoMatchView() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [puestoId]);
 
     // Disparador del ciclo de vida al montar el componente
     useEffect(() => {
         if (puestoId) {
             obtenerCandidatosMatch();
         }
-    }, [puestoId]);
+    }, [puestoId, obtenerCandidatosMatch]);
 
     // Función auxiliar para asignar el color del badge según el porcentaje de coincidencia
     const obtenerEstiloBadge = (porcentaje) => {

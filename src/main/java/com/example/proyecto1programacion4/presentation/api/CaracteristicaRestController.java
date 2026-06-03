@@ -84,6 +84,27 @@ public class CaracteristicaRestController {
         ));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> eliminarCaracteristica(@PathVariable Integer id) {
+        Caracteristica caracteristica = caracteristicaRepository.findById(id).orElse(null);
+
+        if (caracteristica == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (caracteristicaRepository.existsByIdPadre(caracteristica)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                    "mensaje", "No se puede eliminar una caracteristica que tiene subcategorias."
+            ));
+        }
+
+        caracteristicaRepository.delete(caracteristica);
+
+        return ResponseEntity.ok(Map.of(
+                "mensaje", "Caracteristica eliminada correctamente."
+        ));
+    }
+
     private Map<String, Object> convertirCaracteristica(Caracteristica caracteristica) {
         Map<String, Object> map = new java.util.LinkedHashMap<>();
         map.put("id", caracteristica.getId());

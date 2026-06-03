@@ -1,11 +1,17 @@
 package com.example.proyecto1programacion4.presentation.api;
 
+import com.example.proyecto1programacion4.data.CaracteristicaRepository;
 import com.example.proyecto1programacion4.data.OferenteCaracteristicaRepository;
 import com.example.proyecto1programacion4.data.OferenteRepository;
+import com.example.proyecto1programacion4.data.PuestoRepository;
 import com.example.proyecto1programacion4.logic.LogicService;
 import com.example.proyecto1programacion4.logic.Oferente;
 import com.example.proyecto1programacion4.logic.OferenteCaracteristica;
+import com.example.proyecto1programacion4.logic.Caracteristica;
+import com.example.proyecto1programacion4.logic.Puesto;
+import com.example.proyecto1programacion4.logic.PuestoCaracteristica;
 import com.example.proyecto1programacion4.presentation.api.dto.HabilidadRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,8 +25,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Comparator;
 import java.util.UUID;
 
 @RestController
@@ -30,17 +40,25 @@ public class OferenteRestController {
     private final LogicService logicService;
     private final OferenteRepository oferenteRepository;
     private final OferenteCaracteristicaRepository oferenteCaracteristicaRepository;
+    private final CaracteristicaRepository caracRepo;
+    private final PuestoRepository puestoRepository;
 
-    private final Path uploadDir = Paths.get("./uploads");
+    private final Path uploadDir;
 
     public OferenteRestController(
             LogicService logicService,
             OferenteRepository oferenteRepository,
-            OferenteCaracteristicaRepository oferenteCaracteristicaRepository
+            OferenteCaracteristicaRepository oferenteCaracteristicaRepository,
+            CaracteristicaRepository caracRepo,
+            PuestoRepository puestoRepository,
+            @Value("${app.upload.dir:uploads}") String uploadDir
     ) {
         this.logicService = logicService;
         this.oferenteRepository = oferenteRepository;
         this.oferenteCaracteristicaRepository = oferenteCaracteristicaRepository;
+        this.caracRepo = caracRepo;
+        this.puestoRepository = puestoRepository;
+        this.uploadDir = Paths.get(uploadDir).toAbsolutePath().normalize();
     }
 
     /**
@@ -55,16 +73,46 @@ public class OferenteRestController {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(Map.of(
-                "email", oferente.getEmail(),
-                "cedula", oferente.getCedula(),
-                "nombre", oferente.getNombre(),
-                "apellido", oferente.getApellido(),
-                "nacionalidad", oferente.getNacionalidad(),
-                "telefono", oferente.getTelefono(),
-                "residencia", oferente.getResidencia(),
-                "curriculoPath", oferente.getCurriculoPath() != null ? oferente.getCurriculoPath() : ""
-        ));
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("email", valorSeguro(oferente.getEmail()));
+        response.put("cedula", valorSeguro(oferente.getCedula()));
+        response.put("nombre", valorSeguro(oferente.getNombre()));
+        response.put("apellido", valorSeguro(oferente.getApellido()));
+        response.put("nacionalidad", valorSeguro(oferente.getNacionalidad()));
+        response.put("telefono", valorSeguro(oferente.getTelefono()));
+        response.put("residencia", valorSeguro(oferente.getResidencia()));
+        response.put("curriculoPath", valorSeguro(oferente.getCurriculoPath()));
+        response.put("tieneCV", oferente.getCurriculoPath() != null && !oferente.getCurriculoPath().isBlank());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/caracteristicas")
+    public ResponseEntity<Map<String, Object>> listarCaracteristicas(@RequestParam(required = false) Integer padreId) {
+        Caracteristica padre = padreId == null ? null : caracRepo.findById(padreId).orElse(null);
+
+        if (padreId != null && padre == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Caracteristica> lista = (padre == null)
+                ? caracRepo.findByIdPadreIsNull()
+                : caracRepo.findByIdPadre(padre);
+
+        List<Map<String, Object>> resultado = lista.stream()
+                .map(caracteristica -> {
+                    Map<String, Object> item = new java.util.LinkedHashMap<>();
+                    item.put("id", caracteristica.getId());
+                    item.put("nombre", caracteristica.getNombre());
+                    item.put("idPadre", caracteristica.getIdPadre() != null ? caracteristica.getIdPadre().getId() : null);
+                    item.put("tieneHijos", caracRepo.existsByIdPadre(caracteristica));
+                    return item;
+                })
+                .toList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("lista", resultado);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -119,7 +167,9 @@ public class OferenteRestController {
             // Guardar las nuevas habilidades
             if (request.getHabilidades() != null && !request.getHabilidades().isEmpty()) {
                 for (HabilidadRequest.HabilidadItem habilidad : request.getHabilidades()) {
-                    OferenteCaracteristica oc = new OferenteCaracteristica();
+                    OferenteCaracteristica oc = oferenteCaracteristicaRepository
+                            .findByCedulaOferenteEmailAndIdCaracteristicaId(email, habilidad.getCaracteristicaId())
+                            .orElseGet(OferenteCaracteristica::new);
                     oc.setCedulaOferente(oferente);
                     oc.setNivel(habilidad.getNivel());
                     logicService.guardarOferenteCaracteristica(oc, habilidad.getCaracteristicaId());
@@ -145,8 +195,18 @@ public class OferenteRestController {
             @RequestParam("archivo") MultipartFile archivo
     ) {
         try {
-            // Validar que sea PDF
-            if (!archivo.getContentType().equals("application/pdf")) {
+            if (archivo == null || archivo.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "mensaje", "Debe seleccionar un archivo PDF."
+                ));
+            }
+
+            String nombreOriginal = archivo.getOriginalFilename() != null ? archivo.getOriginalFilename() : "";
+            String contentType = archivo.getContentType() != null ? archivo.getContentType() : "";
+            boolean esPdf = MediaType.APPLICATION_PDF_VALUE.equalsIgnoreCase(contentType)
+                    || nombreOriginal.toLowerCase(Locale.ROOT).endsWith(".pdf");
+
+            if (!esPdf) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "mensaje", "Solo se permiten archivos PDF."
                 ));
@@ -165,7 +225,9 @@ public class OferenteRestController {
             Files.createDirectories(uploadDir);
 
             // Generar nombre único para el archivo
-            String nombreArchivo = "cv_" + oferente.getCedula() + "_" + UUID.randomUUID() + ".pdf";
+            String identificador = (oferente.getEmail() != null ? oferente.getEmail() : oferente.getCedula())
+                    .replaceAll("[^a-zA-Z0-9._-]", "_");
+            String nombreArchivo = identificador + "_cv_" + UUID.randomUUID() + ".pdf";
             Path rutaArchivo = uploadDir.resolve(nombreArchivo);
 
             // Guardar archivo
@@ -186,6 +248,10 @@ public class OferenteRestController {
         }
     }
 
+    private String valorSeguro(String valor) {
+        return valor != null ? valor : "";
+    }
+
     /**
      * Descargar CV del oferente
      */
@@ -194,12 +260,41 @@ public class OferenteRestController {
         try {
             Resource resource = logicService.obtenerArchivoCV(cedula);
 
+            if (resource == null || !resource.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"cv_" + cedula + ".pdf\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"cv_" + cedula + ".pdf\"")
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
                     .body(resource);
         } catch (Exception ex) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/cv/actual")
+    public ResponseEntity<?> descargarCVActual(Authentication authentication) {
+        try {
+            String email = authentication.getName();
+            Oferente oferente = logicService.buscarOferentePorEmail(email);
+
+            if (oferente == null) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(
+                        "mensaje", "Oferente no encontrado."
+                ));
+            }
+
+            Resource resource = logicService.obtenerArchivoCVDeOferente(oferente);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + oferente.getCurriculoPath() + "\"")
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+                    .body(resource);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                    "mensaje", ex.getMessage()
+            ));
         }
     }
 
@@ -239,6 +334,51 @@ public class OferenteRestController {
 
     }
 
+    @GetMapping("/puestos/privados/recientes")
+    public ResponseEntity<List<Map<String, Object>>> listarPuestosPrivadosRecientes() {
+        List<Puesto> puestos = puestoRepository
+                .findTop3ByTipoPublicacionIgnoreCaseAndActivoTrueOrderByFechaPublicacionDesc("PRIVADA");
+
+        return ResponseEntity.ok(puestos.stream()
+                .map(this::convertirPuesto)
+                .toList());
+    }
+
+    @GetMapping("/puestos/recientes")
+    public ResponseEntity<List<Map<String, Object>>> listarPuestosRecientesParaOferente() {
+        List<Puesto> puestos = puestoRepository.findActivosByTiposPublicacion(List.of("PUBLICA", "PRIVADA"));
+
+        List<Map<String, Object>> resultado = puestos.stream()
+                .map(this::convertirPuesto)
+                .toList();
+
+        return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/puestos/buscar")
+    public ResponseEntity<List<Map<String, Object>>> buscarPuestosDisponibles(
+            @RequestParam(required = false) List<Integer> caracteristicaIds,
+            @RequestParam(required = false) String moneda
+    ) {
+        List<String> tipos = List.of("PUBLICA", "PRIVADA");
+        List<Puesto> puestos;
+
+        if (caracteristicaIds == null || caracteristicaIds.isEmpty()) {
+            puestos = puestoRepository
+                    .findActivosByTiposPublicacion(tipos);
+        } else {
+            puestos = puestoRepository.buscarPorTiposYCaracteristicas(tipos, caracteristicaIds);
+        }
+
+        List<Map<String, Object>> resultado = puestos.stream()
+                .filter(p -> moneda == null || moneda.isBlank() || moneda.equalsIgnoreCase(p.getMoneda()))
+                .sorted(Comparator.comparing(Puesto::getFechaPublicacion, Comparator.nullsLast(Comparator.reverseOrder())))
+                .map(this::convertirPuesto)
+                .toList();
+
+        return ResponseEntity.ok(resultado);
+    }
+
     /**
      * BUSCADOR GLOBAL PARA LA EMPRESA:
      * Obtiene todos los oferentes del sistema inyectándoles sus respectivas habilidades.
@@ -271,5 +411,33 @@ public class OferenteRestController {
         }).toList();
 
         return ResponseEntity.ok(resultado);
+    }
+
+    private Map<String, Object> convertirPuesto(Puesto puesto) {
+        Map<String, Object> map = new java.util.LinkedHashMap<>();
+        map.put("id", puesto.getId());
+        map.put("descripcion", puesto.getDescripcion());
+        map.put("salarioOfrecido", puesto.getSalarioOfrecido());
+        map.put("moneda", puesto.getMoneda());
+        map.put("tipoPublicacion", puesto.getTipoPublicacion());
+        map.put("fechaPublicacion", puesto.getFechaPublicacion());
+        map.put("empresa", puesto.getEmailEmpresa() != null ? puesto.getEmailEmpresa().getNombre() : "");
+        map.put("caracteristicas", puesto.getPuestoCaracteristicas()
+                .stream()
+                .map(this::convertirCaracteristicaPuesto)
+                .toList());
+        return map;
+    }
+
+    private Map<String, Object> convertirCaracteristicaPuesto(PuestoCaracteristica puestoCaracteristica) {
+        Map<String, Object> map = new java.util.LinkedHashMap<>();
+        map.put("id", puestoCaracteristica.getIdCaracteristica() != null
+                ? puestoCaracteristica.getIdCaracteristica().getId()
+                : null);
+        map.put("nombre", puestoCaracteristica.getIdCaracteristica() != null
+                ? puestoCaracteristica.getIdCaracteristica().getNombre()
+                : "");
+        map.put("nivelDeseado", puestoCaracteristica.getNivelDeseado());
+        return map;
     }
 }

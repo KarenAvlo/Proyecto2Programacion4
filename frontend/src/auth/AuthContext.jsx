@@ -1,32 +1,39 @@
-import { createContext, useState, useEffect } from 'react';
-
-export const AuthContext = createContext();
+import { useState, useEffect } from 'react';
+import { AuthContext } from './AuthContextValue';
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // No restaurar sesiones viejas al volver a abrir/correr la app.
+        // Limpiar sesiones viejas que quedaron guardadas permanentemente.
         localStorage.removeItem('token');
         localStorage.removeItem('userType');
         localStorage.removeItem('email');
-        setUser(null);
+
+        const token = sessionStorage.getItem('token');
+        const tipo = sessionStorage.getItem('userType');
+        const email = sessionStorage.getItem('email');
+
+        if (token && tipo && email) {
+            setUser({ email, tipo, token });
+        }
+
         setLoading(false);
     }, []);
 
     const login = (email, tipo, token) => {
         const userData = { email, tipo, token };
-        localStorage.setItem('token', token);
-        localStorage.setItem('userType', tipo);
-        localStorage.setItem('email', email);
+        sessionStorage.setItem('token', token);
+        sessionStorage.setItem('userType', tipo);
+        sessionStorage.setItem('email', email);
         setUser(userData);
     };
 
     const logout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userType');
-        localStorage.removeItem('email');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('userType');
+        sessionStorage.removeItem('email');
         setUser(null);
     };
 

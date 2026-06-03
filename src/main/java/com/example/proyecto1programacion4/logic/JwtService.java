@@ -3,6 +3,7 @@ package com.example.proyecto1programacion4.logic;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -12,11 +13,13 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private static final String SECRET = "CAMBIA_ESTA_CLAVE_SECRETA_DEBE_TENER_AL_MENOS_32_CARACTERES";
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 4;
 
+    @Value("${app.jwt.secret}")
+    private String secret;
+
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generarToken(Usuario usuario) {

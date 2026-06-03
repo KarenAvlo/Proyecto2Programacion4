@@ -33,7 +33,7 @@ export default function DetalleOferenteView() {
 
     const handleAbrirCV = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token') || localStorage.getItem('token');
             const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
             const response = await fetch(`${apiUrl}/empresa/candidatos/${cedula}/cv`, {
                 headers: token ? { Authorization: `Bearer ${token}` } : {},

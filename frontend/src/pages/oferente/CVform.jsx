@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
@@ -6,51 +6,76 @@ import { oferenteAPI } from '../../api/oferente';
 import './CVform.css';
 
 export default function OferenteCV() {
-    const [perfil, setPerfil] = useState(null);
-    const [curriculoPath, setCurriculoPath] = useState(null);
+    const fileInputRef = useRef(null);
+    const [curriculoPath, setCurriculoPath] = useState('');
     const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
     const [loading, setLoading] = useState(true);
     const [subiendo, setSubiendo] = useState(false);
     const [mensajeExito, setMensajeExito] = useState(null);
     const [mensajeError, setMensajeError] = useState(null);
 
+    const obtenerNombreCV = (data) => (
+        data?.curriculoPath
+        || data?.curriculo_path
+        || data?.nombreArchivo
+        || ''
+    );
+
+    const esArchivoPdf = (file) => {
+        if (!file) return false;
+        return file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+    };
+
     const cargarPerfil = useCallback(async () => {
         setLoading(true);
         setMensajeError(null);
         try {
             const data = await oferenteAPI.getPerfil();
-            setPerfil(data);
-            setCurriculoPath(data.curriculoPath || null);
+            setCurriculoPath(obtenerNombreCV(data));
         } catch (error) {
             console.error('Error al verificar el estado del CV:', error);
-            setMensajeError('No se pudo conectar con el servidor para verificar tu currículum.');
-            setPerfil(null);
-            setCurriculoPath(null);
+            setMensajeError('No se pudo conectar con el servidor para verificar tu curriculum.');
+            setCurriculoPath('');
         } finally {
             setLoading(false);
         }
     }, []);
 
     useEffect(() => {
-        cargarPerfil();
+        void Promise.resolve().then(cargarPerfil);
     }, [cargarPerfil]);
 
-    const handleFileChange = (e) => {
-        setArchivoSeleccionado(e.target.files?.[0] || null);
-        setMensajeError(null);
-        setMensajeExito(null);
+    const crearUrlCV = async () => {
+        if (!curriculoPath) {
+            throw new Error('No tienes un curriculum cargado actualmente.');
+        }
+
+        const blob = await oferenteAPI.obtenerCVBlob();
+        if (blob.type && blob.type !== 'application/pdf') {
+            throw new Error('El archivo recibido no es un PDF valido.');
+        }
+        return window.URL.createObjectURL(blob);
     };
 
-    const handleVerCVActual = async () => {
-        if (!perfil?.cedula || !curriculoPath) {
-            setMensajeError('No tienes un currículum cargado actualmente.');
+    const handleFileChange = (e) => {
+        const file = e.target.files?.[0] || null;
+        setMensajeError(null);
+        setMensajeExito(null);
+
+        if (file && !esArchivoPdf(file)) {
+            setArchivoSeleccionado(null);
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            setMensajeError('Solo se permiten archivos PDF.');
             return;
         }
 
+        setArchivoSeleccionado(file);
+    };
+
+    const handleVerCVActual = async () => {
         try {
             setMensajeError(null);
-            const blob = await oferenteAPI.obtenerCVBlob(perfil.cedula);
-            const url = window.URL.createObjectURL(blob);
+            const url = await crearUrlCV();
             const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
 
             if (!newWindow) {
@@ -64,7 +89,7 @@ export default function OferenteCV() {
             setTimeout(() => window.URL.revokeObjectURL(url), 10000);
         } catch (error) {
             console.error('Error al abrir el CV:', error);
-            setMensajeError('No se pudo abrir el PDF del currículum.');
+            setMensajeError(error.message || 'No se pudo abrir el PDF del curriculum.');
         }
     };
 
@@ -72,7 +97,12 @@ export default function OferenteCV() {
         e.preventDefault();
 
         if (!archivoSeleccionado) {
-            setMensajeError('Por favor, selecciona un archivo PDF válido.');
+            setMensajeError('Por favor, selecciona un archivo PDF valido.');
+            return;
+        }
+
+        if (!esArchivoPdf(archivoSeleccionado)) {
+            setMensajeError('Solo se permiten archivos PDF.');
             return;
         }
 
@@ -84,11 +114,15 @@ export default function OferenteCV() {
             const response = await oferenteAPI.subirCV(archivoSeleccionado);
 
             await cargarPerfil();
+            if (response?.nombreArchivo) {
+                setCurriculoPath(response.nombreArchivo);
+            }
             setArchivoSeleccionado(null);
-            setMensajeExito(response?.mensaje || '¡Tu currículum se ha subido y reemplazado correctamente!');
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            setMensajeExito(response?.mensaje || 'Tu curriculum se guardo correctamente.');
         } catch (error) {
             console.error('Error en la subida del documento:', error);
-            setMensajeError('Ocurrió un error al subir el PDF o el archivo no es válido.');
+            setMensajeError(error.message || 'Ocurrio un error al subir el PDF.');
         } finally {
             setSubiendo(false);
         }
@@ -104,30 +138,32 @@ export default function OferenteCV() {
                         {mensajeExito && <div className="alert-cv alert-success-cv">{mensajeExito}</div>}
                         {mensajeError && <div className="alert-cv alert-error-cv">{mensajeError}</div>}
 
-                        <h2>Gestión de Currículum</h2>
+                        <h2>Gestion de Curriculum</h2>
                         <p className="cv-description">
-                            Visualiza el PDF guardado en la base de datos, o sube uno nuevo para reemplazar el anterior.
+                            Consulta el PDF guardado o sube uno nuevo para agregarlo o reemplazarlo.
                         </p>
 
                         {loading ? (
-                            <div className="loading-placeholder">Consultando repositorios...</div>
+                            <div className="loading-placeholder">Verificando curriculum...</div>
                         ) : (
                             <div className="status-section-cv">
                                 {curriculoPath ? (
                                     <div className="cv-registered-box">
-                                        <span className="status-badge-cv status-ok-cv">● CV Registrado</span>
+                                        <span className="status-badge-cv status-ok-cv">CV registrado</span>
                                         <p className="file-info-text">
                                             Archivo actual: <span>{curriculoPath}</span>
                                         </p>
-                                        <button type="button" onClick={handleVerCVActual} className="btn-view-cv">
-                                            Ver mi CV actual
-                                        </button>
+                                        <div className="cv-actions">
+                                            <button type="button" onClick={handleVerCVActual} className="btn-view-cv">
+                                                Ver CV
+                                            </button>
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="cv-empty-box">
-                                        <span className="status-badge-cv status-none-cv">○ Sin currículum</span>
+                                        <span className="status-badge-cv status-none-cv">Sin curriculum</span>
                                         <p className="file-info-text muted-text">
-                                            Aún no has subido tu hoja de vida al sistema.
+                                            Aun no tienes un PDF registrado en el sistema.
                                         </p>
                                     </div>
                                 )}
@@ -137,28 +173,29 @@ export default function OferenteCV() {
                         <form onSubmit={handleSubirCV} className="upload-cv-form">
                             <div className="upload-drag-area">
                                 <label htmlFor="archivo" className="file-input-label">
-                                    Seleccionar documento PDF
+                                    Seleccionar PDF
                                 </label>
                                 <input
+                                    ref={fileInputRef}
                                     type="file"
                                     name="archivo"
                                     id="archivo"
-                                    accept="application/pdf"
+                                    accept="application/pdf,.pdf"
                                     onChange={handleFileChange}
                                     required
                                 />
                                 {archivoSeleccionado && (
                                     <p className="selected-filename">
-                                        📎 Listo para subir: <strong>{archivoSeleccionado.name}</strong>
+                                        Listo para subir: <strong>{archivoSeleccionado.name}</strong>
                                     </p>
                                 )}
                                 <p className="max-size-hint">
-                                    Al subir uno nuevo, se reemplaza el currículum guardado en la base de datos.
+                                    El archivo debe ser PDF. Si ya existe uno, se reemplazara.
                                 </p>
                             </div>
 
                             <button type="submit" className="btn-upload-cv" disabled={subiendo}>
-                                {subiendo ? 'Guardando...' : 'Guardar y subir currículum'}
+                                {subiendo ? 'Guardando...' : 'Guardar curriculum'}
                             </button>
                         </form>
 
@@ -167,7 +204,6 @@ export default function OferenteCV() {
                                 &larr; Volver al Dashboard
                             </Link>
                         </div>
-
                     </div>
                 </main>
 

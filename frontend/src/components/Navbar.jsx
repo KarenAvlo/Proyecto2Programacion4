@@ -53,6 +53,7 @@ export default function Navbar() {
                         {user.tipo === 'OFERENTE' && (
                             <>
                                 <a onClick={() => navigate('/oferente/dashboard')}>Dashboard</a>
+                                <a onClick={() => navigate('/puestos/buscar')}>Buscar Puestos</a>
                                 <a onClick={() => navigate('/oferente/habilidades')}>Mis Habilidades</a>
                                 <a onClick={() => navigate('/oferente/cv')}>Mi CV</a>
                             </>

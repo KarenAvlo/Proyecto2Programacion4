@@ -1,7 +1,6 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { apiClient } from '../../api/client';
 
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
@@ -33,7 +32,7 @@ export default function AdminReportes() {
 
     const fetchPdf = async (path) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token') || localStorage.getItem('token');
             const headers = {};
             if (token) headers['Authorization'] = `Bearer ${token}`;
 
@@ -60,7 +59,7 @@ export default function AdminReportes() {
         try {
             const blob = await fetchPdf(`/admin/reporte/mensual?mes=${mesSeleccionado}`);
             openBlobInNewTab(blob, `Reporte_Mes_${mesSeleccionado}.pdf`);
-        } catch (error) {
+        } catch {
             alert('No se pudo generar el reporte. Asegúrate de estar autenticado.');
         }
     };
@@ -69,7 +68,7 @@ export default function AdminReportes() {
         try {
             const blob = await fetchPdf(`/admin/reportes/exportar/oferentes`);
             openBlobInNewTab(blob, 'Reporte_Estadistico_Oferentes.pdf');
-        } catch (error) {
+        } catch {
             alert('No se pudo exportar oferentes. Asegúrate de estar autenticado.');
         }
     };

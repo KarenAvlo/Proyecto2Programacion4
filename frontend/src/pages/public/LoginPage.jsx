@@ -21,15 +21,20 @@ export default function LoginPage() {
 
         try {
             const response = await authAPI.login(email, clave);
-            login(response.email, response.tipo, response.token);
+            const tipo = response.tipo?.replace('ROLE_', '').trim().toUpperCase();
+            login(response.email, tipo, response.token);
 
             const path = {
                 'ADMIN': '/admin/dashboard',
                 'EMPRESA': '/empresa/dashboard',
                 'OFERENTE': '/oferente/dashboard',
-            }[response.tipo];
+            }[tipo];
 
-            navigate(path);
+            if (!path) {
+                throw new Error('Tipo de usuario no reconocido');
+            }
+
+            navigate(path, { replace: true });
         } catch (err) {
             setError(err.message || 'Error al iniciar sesión');
         } finally {

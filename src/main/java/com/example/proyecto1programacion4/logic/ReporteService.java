@@ -82,7 +82,7 @@ public class ReporteService {
             PdfPTable table = new PdfPTable(2);
             table.addCell("Habilidad");
             table.addCell("Nivel");
-            List<OferenteCaracteristica> habilidades = oferenteCaracRepo.findByCedulaOferente(o.getCedula());
+            List<OferenteCaracteristica> habilidades = oferenteCaracRepo.findByCedulaOferenteCedula(o.getCedula());
 
             for (OferenteCaracteristica oh : habilidades) {
                 table.addCell(oh.getIdCaracteristica().getNombre());

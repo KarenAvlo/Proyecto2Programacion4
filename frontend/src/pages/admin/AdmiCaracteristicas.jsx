@@ -44,7 +44,7 @@ export default function AdminCaracteristicas() {
                 try {
                     const hijas = await adminAPI.getPorPadre(cat.id);
                     hijosMap[cat.id] = hijas.length > 0;
-                } catch (error) {
+                } catch {
                     hijosMap[cat.id] = false;
                 }
             }
@@ -106,6 +106,20 @@ export default function AdminCaracteristicas() {
         }
     };
 
+    const handleEliminar = async (id, nombre) => {
+        if (!window.confirm(`Eliminar "${nombre}"?`)) {
+            return;
+        }
+
+        try {
+            await adminAPI.eliminarCaracteristica(id);
+            fetchData();
+        } catch (error) {
+            console.error('Error al eliminar caracteristica:', error);
+            alert(error.message || 'Error al eliminar la caracteristica.');
+        }
+    };
+
     return (
 
         <div className="page-caracteristicas-container">
@@ -153,6 +167,12 @@ export default function AdminCaracteristicas() {
                                                     Entrar
                                                 </button>
                                             )}
+                                            <button
+                                                onClick={() => handleEliminar(c.id, c.nombre)}
+                                                className="btn-eliminar"
+                                            >
+                                                Eliminar
+                                            </button>
                                         </div>
                                     ))
                                 ) : (
